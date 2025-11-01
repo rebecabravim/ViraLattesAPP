@@ -1,0 +1,149 @@
+.sidebar {
+  background-color: #0f172a;
+  color: #f1f5f9;
+  width: 260px;
+  min-height: 100vh;
+  transition: width 0.5s ease;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+
+  .sidebar-header {
+    display: flex;
+    justify-content: center; // botão agora centralizado horizontalmente
+    align-items: center;
+    height: 64px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .sidebar-toggle {
+    background-color: #f1f5f9;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+
+    .toggle-icon {
+      font-size: 20px;
+      color: #0f172a;
+      transition: transform 0.3s ease;
+    }
+
+    &:hover {
+      background-color: #e2e8f0;
+
+      .toggle-icon {
+        transform: scale(1.1);
+        color: #0ea5e9;
+      }
+    }
+  }
+
+  &.collapsed {
+    width: 80px;
+
+    .label,
+    .user-info {
+      display: none;
+    }
+
+    .menu-item {
+      justify-content: center;
+    }
+  }
+
+  .menu-content {
+    padding: 2rem 0.75rem;
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition:
+        background-color 0.2s,
+        transform 0.2s;
+
+      .icon {
+        font-size: 24px;
+        color: #e2e8f0;
+      }
+
+      .label {
+        font-size: 1rem;
+        font-weight: 500;
+      }
+
+      &:hover {
+        background-color: #1e293b;
+        transform: translateX(4px);
+      }
+
+      &.active {
+        background-color: #1e293b;
+
+        .icon,
+        .label {
+          color: #38bdf8;
+        }
+      }
+    }
+  }
+
+  .user-info {
+    padding: 1rem 1.25rem;
+    text-align: center;
+
+    .greeting {
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .action-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      button {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 0.95rem;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        color: white;
+        font-weight: 500;
+        transition: background-color 0.2s ease-in-out;
+      }
+
+      .profile-button {
+        background-color: #3b82f6;
+
+        &:hover {
+          background-color: #2563eb;
+        }
+      }
+
+      .logout-button {
+        background-color: #ef4444;
+
+        &:hover {
+          background-color: #dc2626;
+        }
+      }
+    }
+  }
+}

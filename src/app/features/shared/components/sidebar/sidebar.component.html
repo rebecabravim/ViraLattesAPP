@@ -1,0 +1,32 @@
+<div class="sidebar" [class.collapsed]="!isOpen">
+  <div class="sidebar-header">
+    <button class="sidebar-toggle" (click)="toggleSidebar()" aria-label="Alternar menu">
+      <span class="material-symbols-outlined toggle-icon">
+        {{ isOpen ? 'chevron_left' : 'chevron_right' }}
+      </span>
+    </button>
+  </div>
+
+  <div class="menu-content">
+    <ng-container *ngFor="let item of menuItems">
+      <div
+        class="menu-item"
+        *ngIf="isVisible(item)"
+        (click)="routeTo(item.route)"
+        [title]="!isOpen ? item.label : ''"
+        [ngClass]="{ active: currentRoute.includes(item.route.split('/')[0]) }"
+      >
+        <span class="material-symbols-outlined icon">{{ item.icon }}</span>
+        <span class="label" *ngIf="isOpen">{{ item.label }}</span>
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="user-info" *ngIf="isOpen">
+    <p class="greeting">Olá, {{ userName }}!</p>
+    <div class="action-buttons">
+      <button class="profile-button" (click)="routeTo(ROUTE_PATHS.personalInfo)">Ver Perfil</button>
+      <button class="logout-button" (click)="logout()">Sair</button>
+    </div>
+  </div>
+</div>
