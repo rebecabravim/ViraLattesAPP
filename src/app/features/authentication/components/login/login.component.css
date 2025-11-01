@@ -1,0 +1,194 @@
+/* 
+Font: inter
+Cores do projeto:
+Preto: 
+    #42a5f5 principal
+    #42a5f5 secundario
+    #42a5f5 disabilitado
+Azul:
+    #1976d2 principal 
+    #1565c0 escuro
+    #42a5f5 claro
+    #42a5f5 hover
+    #42a5f5 selected
+    #42a5f5 focus
+    #42a5f5 focus visible
+    #42a5f5 outline border
+Roxo:
+   #42a5f5 principal
+   #42a5f5 escuro
+   #42a5f5 claro
+Vermelho: 
+    #42a5f5 
+Laranja: 
+    #42a5f5
+*/
+
+* {
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #f0f0f0;
+  padding: 1rem;
+}
+
+/* Login container with responsive sizing */
+.login-container {
+  max-width: 400px;
+  width: 100%;
+  margin: 2rem auto;
+  background-color: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Header bar */
+header {
+  color: #1565c0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  height: 60px;
+}
+
+header h1 {
+  font-size: 1.75rem;
+  font-weight: bold;
+}
+
+.login-header {
+  text-align: center;
+}
+
+/* Form styling */
+form {
+  padding: 1.5rem;
+  margin-top: 0;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+label {
+  display: block;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Input fields */
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+  width: 100%;
+  padding: 0.625rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+/* Password input with icon */
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.input-wrapper input {
+  flex: 1;
+  border: none;
+  padding: 0.625rem;
+  font-size: 1rem;
+  outline: none;
+}
+
+.input-addon {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  border-left: 1px solid #ccc;
+  cursor: pointer;
+  background-color: white;
+}
+
+.input-addon .material-icons {
+  font-size: 1.25rem;
+  color: #555;
+}
+
+/* Submit button */
+button[type="submit"] {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* Footer links */
+.login-footer {
+  margin-top: 1rem;
+}
+
+.login-footer a {
+  display: block;
+  text-align: center;
+  padding: 0.5rem 0;
+  font-size: 0.9rem;
+  text-decoration: none;
+  color: #1565c0;
+}
+
+.login-footer a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive tweaks */
+@media (max-width: 480px) {
+  .login-container {
+    margin: 1rem;
+    padding: 0;
+    box-shadow: none;
+    border: none;
+  }
+
+  header {
+    height: 50px;
+    padding: 12px;
+  }
+
+  header h1 {
+    font-size: 1.1rem;
+  }
+
+  form {
+    padding: 1rem;
+  }
+
+  input[type="text"],
+  input[type="password"],
+  input[type="email"] {
+    font-size: 0.95rem;
+  }
+
+  button[type="submit"] {
+    font-size: 0.95rem;
+  }
+
+  .login-footer a {
+    font-size: 0.85rem;
+  }
+}

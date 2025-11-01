@@ -1,1 +1,12 @@
- 
+<div class="app-container" *ngIf="shouldShowSidebar; else noSidebarLayout">
+  <app-sidebar [currentRoute]="currentRoute"></app-sidebar>
+  <div class="main-content" [class.collapsed]="!isSidebarOpen">
+    <router-outlet></router-outlet>
+  </div>
+  <app-loader></app-loader>
+</div>
+
+<ng-template #noSidebarLayout>
+  <router-outlet></router-outlet>
+  <app-loader></app-loader>
+</ng-template>

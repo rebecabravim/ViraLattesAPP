@@ -1,1 +1,24 @@
- 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  overflow-x: hidden;
+}
+
+:root {
+  --primary-color: #1976d2;
+  --primary-color-light: #42a5f5;
+  --secondary-color: #9c27b0;
+  --secondary-color-light: #ba68c8;
+  --text-color: #333;
+  --border-radius: 10px;
+  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
