@@ -20,6 +20,11 @@ export class HomeComponent {
   Pesquisar(): void {
     // this.curriculoService.pesquisar();
   }
+
+  navigateToCurriculos(): void {
+    this.router.navigate([ROUTE_PATHS.curriculo]);
+  }
+
   onLogout(): void {
     this.authService.logout();
   }

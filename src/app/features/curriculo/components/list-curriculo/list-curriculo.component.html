@@ -1,0 +1,88 @@
+<div class="list-curriculo-container">
+  <div class="header">
+    <h2>Lista de Currículos</h2>
+  </div>
+
+  <div class="search-section">
+    <div class="search-box">
+      <input 
+        type="text" 
+        placeholder="Buscar por nome, email ou telefone..." 
+        [(ngModel)]="searchTerm"
+        (input)="onSearch()"
+        class="search-input">
+      <button 
+        *ngIf="searchTerm" 
+        class="btn-clear" 
+        (click)="onClearSearch()"
+        title="Limpar busca">
+        X
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Carregando currículos...</p>
+  </div>
+
+  <div *ngIf="!isLoading && filteredCurriculos.length === 0 && !searchTerm" class="empty-state">
+    <div class="empty-icon">📄</div>
+    <h3>Nenhum currículo encontrado</h3>
+    <p>Não há currículos cadastrados no sistema</p>
+  </div>
+
+  <div *ngIf="!isLoading && filteredCurriculos.length === 0 && searchTerm" class="no-results">
+    <div class="no-results-icon">🔍</div>
+    <h3>Nenhum resultado encontrado</h3>
+    <p>Não encontramos currículos que correspondam à sua busca por "{{ searchTerm }}"</p>
+    <button class="btn-secondary" (click)="onClearSearch()">
+      Ver Todos os Currículos
+    </button>
+  </div>
+
+  <div *ngIf="!isLoading && filteredCurriculos.length > 0" class="curriculos-grid">
+    <div *ngFor="let curriculo of filteredCurriculos" class="curriculo-card">
+      <div class="card-header">
+        <h3>{{ curriculo.nomeCompleto }}</h3>
+        <div class="card-actions">
+          <button class="btn-action btn-view" (click)="onView(curriculo.id)" title="Visualizar">
+            👁️
+          </button>
+        </div>
+      </div>
+      
+      <div class="card-body">
+        <div class="info-item">
+          <span class="label">Identificador:</span>
+          <span class="value">{{ curriculo.numeroIdentificador }}</span>
+        </div>
+        
+        <div class="info-item" *ngIf="curriculo.instituicao">
+          <span class="label">Instituição:</span>
+          <span class="value">{{ curriculo.instituicao }}</span>
+        </div>
+        
+        <div class="info-item" *ngIf="curriculo.nomeEmCitacoes">
+          <span class="label">Nome em Citações:</span>
+          <span class="value citation">{{ curriculo.nomeEmCitacoes }}</span>
+        </div>
+        
+        <div class="info-item resume" *ngIf="curriculo.resumoBreve">
+          <span class="label">Resumo:</span>
+          <p class="resume-text">{{ curriculo.resumoBreve | slice:0:200 }}{{ curriculo.resumoBreve.length > 200 ? '...' : '' }}</p>
+        </div>
+      </div>
+      
+      <div class="card-footer">
+        <button class="btn-primary-outline" (click)="onView(curriculo.id)">
+          Ver Detalhes
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && filteredCurriculos.length > 0" class="results-info">
+    <p>Mostrando {{ filteredCurriculos.length }} de {{ totalCount }} currículos</p>
+  </div>
+</div>

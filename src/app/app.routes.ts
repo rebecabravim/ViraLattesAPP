@@ -14,7 +14,11 @@ export const appRoutes: Route[] = [
     path: ROUTE_PATHS.home,
     component: HomeComponent,
     canActivate: [AuthGuard],
-  }, 
+  },
+  {
+    path: ROUTE_PATHS.curriculo,
+    loadChildren: () => import('./features/curriculo/curriculo.module').then(m => m.CurriculoModule),
+  },
   {
     path: ROUTE_PATHS.wildcard,
     redirectTo: ROUTE_PATHS.home,

@@ -1,0 +1,31 @@
+<div class="view-curriculo-container">
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Carregando currículo...</p>
+  </div>
+
+  <div *ngIf="!isLoading && curriculo" class="curriculo-content">
+    <!-- Cabeçalho com ações -->
+    <div class="header-actions no-print">
+      <button class="btn-back" (click)="onBack()">
+        ← Voltar à Lista
+      </button>
+    </div>
+
+    <!-- Conteúdo do currículo -->
+    <div class="curriculo-document">
+      <!-- Cabeçalho do currículo -->
+      <header class="curriculo-header">
+        <!-- <h1>{{ curriculo.nome }}</h1> -->
+ 
+      </header>
+
+  <div *ngIf="!isLoading && !curriculo" class="error-state">
+    <div class="error-icon">❌</div>
+    <h3>Currículo não encontrado</h3>
+    <p>O currículo solicitado não foi encontrado ou pode ter sido removido.</p>
+    <button class="btn-primary" (click)="onBack()">
+      Voltar à Lista
+    </button>
+  </div>
+</div>
