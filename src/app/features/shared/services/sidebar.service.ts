@@ -9,6 +9,16 @@ export class SidebarService {
   isOpen$ = this.isOpen.asObservable();
 
   toggle() {
-    this.isOpen.next(!this.isOpen.value);
+    const currentValue = this.isOpen.value;
+    const newValue = !currentValue;
+    this.isOpen.next(newValue);
+   }
+
+  close() {
+    this.isOpen.next(false);
+  }
+
+  open() {
+    this.isOpen.next(true);
   }
 }
