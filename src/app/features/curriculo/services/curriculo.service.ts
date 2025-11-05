@@ -16,18 +16,40 @@ export interface CurriculoResumo {
   numeroIdentificador: string;
   nomeCompleto: string;
   nomeEmCitacoes: string;
+  nacionalidade?: string;
   instituicao: string;
   resumoBreve: string;
+}
+
+// Interface para paginação
+export interface Pagination {
+  totalRecords: number;
+  pageNumber: number;
+  pageSize: number;
+  totalPages: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+}
+
+// Interface para filtros de busca
+export interface FiltrosBusca {
+  nome?: string;
+  instituicao?: string;
+  temDoutorado?: boolean;
+  anoAPartirDe?: number;
+  linhaDePesquisa?: string;
+  areaDePesquisa?: string;
+  palavrasChave?: string[]; 
+  paisDeNacionalidade?: string;
+  ehBrasileiro?: boolean;
 }
 
 // Interface para a resposta da API de busca/listagem
 interface ApiResponseBusca {
   success: boolean;
   message: string;
-  data: {
-    count: number;
-    data: CurriculoResumo[];
-  };
+  data: CurriculoResumo[];
+  pagination: Pagination;
 }
 
 @Injectable({
@@ -52,23 +74,56 @@ export class CurriculoService {
     return this.http.get<ApiResponseBusca>(`${this.apiUrl}`, this.getHttpOptions());
   }
 
-  // Buscar currículos por nome (usando a API real)
-  searchByName(name: string): Observable<ApiResponseBusca> {
-    const params = { name: name.trim() };
+  // Buscar currículos com filtros avançados
+  searchWithFilters(filtros: FiltrosBusca): Observable<ApiResponseBusca> {
+    // Sempre enviar pelo menos um objeto vazio para garantir que o payload não seja null
+    const filtrosLimpos: any = {};
     
-    return this.http.get<ApiResponseBusca>(`${this.apiUrl}/search`, { 
-      ...this.getHttpOptions(), 
-      params 
-    });
+    if (filtros.nome?.trim()) {
+      filtrosLimpos.nome = filtros.nome.trim();
+    }
+    
+    if (filtros.instituicao?.trim()) {
+      filtrosLimpos.instituicao = filtros.instituicao.trim();
+    }
+    
+    if (filtros.temDoutorado !== undefined && filtros.temDoutorado !== null) {
+      filtrosLimpos.temDoutorado = filtros.temDoutorado;
+    }
+    
+    if (filtros.anoAPartirDe && filtros.anoAPartirDe > 0) {
+      filtrosLimpos.anoAPartirDe = filtros.anoAPartirDe;
+    }
+    
+    if (filtros.linhaDePesquisa?.trim()) {
+      filtrosLimpos.linhaDePesquisa = filtros.linhaDePesquisa.trim();
+    }
+    
+    if (filtros.areaDePesquisa?.trim()) {
+      filtrosLimpos.areaDePesquisa = filtros.areaDePesquisa.trim();
+    }
+    
+    if (filtros.paisDeNacionalidade?.trim()) {
+      filtrosLimpos.paisDeNacionalidade = filtros.paisDeNacionalidade.trim();
+    }
+    
+    if (filtros.ehBrasileiro !== undefined && filtros.ehBrasileiro !== null) {
+      filtrosLimpos.ehBrasileiro = filtros.ehBrasileiro;
+    }
+    
+    if (filtros.palavrasChave && filtros.palavrasChave.length > 0) {
+      filtrosLimpos.palavrasChave = filtros.palavrasChave;
+    }
+
+    console.log('Filtros recebidos:', filtros);
+    console.log('Filtros limpos (payload):', filtrosLimpos);
+    console.log('URL da requisição:', `${this.apiUrl}/busca`);
+
+    return this.http.post<ApiResponseBusca>(`${this.apiUrl}/busca`, filtrosLimpos, this.getHttpOptions());
   }
 
   // Buscar currículo por Nome específico
-  getCurriculoByNome(nome: string): Observable<ApiResponse<Curriculo>> {
-    return this.http.get<ApiResponse<Curriculo>>(`${this.apiUrl}/search`, { 
-      ...this.getHttpOptions(), 
-      params: { name: nome } 
-    });
-  }
+ 
 
   // Buscar currículo por ID (se necessário)
   getCurriculoById(id: string): Observable<ApiResponse<Curriculo>> {

@@ -1,0 +1,154 @@
+<div class="filtros-container" [ngClass]="{'expanded': isExpanded}">
+  <div class="filtros-header">
+    <h3>🔍 Filtros Avançados</h3>
+    <button 
+      class="toggle-btn" 
+      (click)="toggleFilters()"
+      [attr.aria-expanded]="isExpanded">
+      {{ isExpanded ? '▲ Ocultar' : '▼ Mostrar' }}
+    </button>
+  </div>
+
+  <div class="filtros-content" *ngIf="isExpanded">
+    <form (ngSubmit)="onApplyFilters()" #filtrosForm="ngForm">
+      
+      <!-- Primeira linha: Nome e Instituição -->
+      <div class="filtros-row">
+        <div class="filtro-item">
+          <label for="nome">Nome:</label>
+          <input 
+            type="text" 
+            id="nome"
+            [(ngModel)]="filtros.nome"
+            name="nome"
+            placeholder="Nome do pesquisador..."
+            class="filtro-input">
+        </div>
+        
+        <div class="filtro-item">
+          <label for="instituicao">Instituição:</label>
+          <input 
+            type="text" 
+            id="instituicao"
+            [(ngModel)]="filtros.instituicao"
+            name="instituicao"
+            placeholder="Ex: USP, UNICAMP..."
+            class="filtro-input">
+        </div>
+      </div>
+
+      <!-- Segunda linha: Doutorado e Ano -->
+      <div class="filtros-row">
+        <div class="filtro-item">
+          <label class="checkbox-label">
+            <input 
+              type="checkbox" 
+              [(ngModel)]="filtros.temDoutorado"
+              name="temDoutorado"
+              class="filtro-checkbox">
+            <span class="checkmark"></span>
+            Possui Doutorado
+          </label>
+        </div>
+        
+        <div class="filtro-item">
+          <label for="anoAPartirDe">Ano a partir de:</label>
+          <input 
+            type="number" 
+            id="anoAPartirDe"
+            [(ngModel)]="filtros.anoAPartirDe"
+            name="anoAPartirDe"
+            placeholder="Ex: 2020"
+            min="1950"
+            [max]="currentYear"
+            class="filtro-input">
+        </div>
+      </div>
+
+      <!-- Terceira linha: Áreas de pesquisa -->
+      <div class="filtros-row">
+        <div class="filtro-item">
+          <label for="linhaDePesquisa">Linha de Pesquisa:</label>
+          <input 
+            type="text" 
+            id="linhaDePesquisa"
+            [(ngModel)]="filtros.linhaDePesquisa"
+            name="linhaDePesquisa"
+            placeholder="Ex: Inteligência Artificial..."
+            class="filtro-input">
+        </div>
+        
+        <div class="filtro-item">
+          <label for="areaDePesquisa">Área de Pesquisa:</label>
+          <input 
+            type="text" 
+            id="areaDePesquisa"
+            [(ngModel)]="filtros.areaDePesquisa"
+            name="areaDePesquisa"
+            placeholder="Ex: Ciência da Computação..."
+            class="filtro-input">
+        </div>
+      </div>
+
+      <!-- Quarta linha: Nacionalidade -->
+      <div class="filtros-row">
+        <div class="filtro-item">
+          <label class="checkbox-label">
+            <input 
+              type="checkbox" 
+              [(ngModel)]="filtros.ehBrasileiro"
+              name="ehBrasileiro"
+              class="filtro-checkbox">
+            <span class="checkmark"></span>
+            É Brasileiro
+          </label>
+        </div>
+        
+        <div class="filtro-item">
+          <label for="paisDeNacionalidade">País de Nacionalidade:</label>
+          <input 
+            type="text" 
+            id="paisDeNacionalidade"
+            [(ngModel)]="filtros.paisDeNacionalidade"
+            name="paisDeNacionalidade"
+            placeholder="Ex: Brasil, Argentina..."
+            class="filtro-input">
+        </div>
+      </div>
+
+      <!-- Quinta linha: Palavras-chave -->
+      <div class="filtros-row full-width">
+        <div class="filtro-item">
+          <label for="palavrasChave">Palavras-chave (separadas por vírgula):</label>
+          <input 
+            type="text" 
+            id="palavrasChave"
+            [(ngModel)]="palavrasChaveText"
+            name="palavrasChave"
+            placeholder="Ex: machine learning, deep learning, AI..."
+            class="filtro-input"
+            (blur)="updatePalavrasChave()">
+        </div>
+      </div>
+
+      <!-- Tags de palavras-chave -->
+      <div class="palavras-chave-tags" *ngIf="filtros.palavrasChave && filtros.palavrasChave.length > 0">
+        <span class="tag" *ngFor="let palavra of filtros.palavrasChave; let i = index">
+          {{ palavra }}
+          <button type="button" class="remove-tag" (click)="removePalavraChave(i)">×</button>
+        </span>
+      </div>
+
+      <!-- Botões de ação -->
+      <div class="filtros-actions">
+        <button type="button" class="btn-secondary" (click)="onClearFilters()">
+          🗑️ Limpar Filtros
+        </button>
+        <button type="submit" class="btn-primary">
+          🔍 Buscar com Filtros
+        </button>
+      </div>
+      
+    </form>
+  </div>
+</div>

@@ -1,0 +1,251 @@
+.filtros-container {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+
+  &.expanded {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.filtros-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  cursor: pointer;
+
+  h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .toggle-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  }
+}
+
+.filtros-content {
+  padding: 20px;
+  background: white;
+}
+
+.filtros-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+
+  &.full-width {
+    grid-template-columns: 1fr;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.filtro-item {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 6px;
+    font-size: 14px;
+
+    &:not(.checkbox-label) {
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+
+  .filtro-input {
+    padding: 10px 12px;
+    border: 2px solid #e1e8ed;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s ease;
+
+    &:focus {
+      border-color: #3498db;
+    }
+
+    &::placeholder {
+      color: #95a5a6;
+    }
+  }
+}
+
+.checkbox-label {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 0 !important;
+  font-weight: 500 !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+
+  .filtro-checkbox {
+    margin-right: 10px;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
+
+  .checkmark {
+    margin-left: 5px;
+  }
+}
+
+.palavras-chave-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 10px 0;
+
+  .tag {
+    background: #e3f2fd;
+    color: #1976d2;
+    padding: 4px 8px;
+    border-radius: 16px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    .remove-tag {
+      background: none;
+      border: none;
+      color: #1976d2;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+      padding: 0;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        background: rgba(25, 118, 210, 0.1);
+      }
+    }
+  }
+}
+
+.filtros-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding-top: 20px;
+  border-top: 1px solid #e9ecef;
+
+  .btn-primary, .btn-secondary {
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-primary {
+    background: #3498db;
+    color: white;
+
+    &:hover {
+      background: #2980b9;
+      transform: translateY(-1px);
+    }
+  }
+
+  .btn-secondary {
+    background: #95a5a6;
+    color: white;
+
+    &:hover {
+      background: #7f8c8d;
+      transform: translateY(-1px);
+    }
+  }
+}
+
+// Responsividade
+@media (max-width: 768px) {
+  .filtros-row {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .filtros-content {
+    padding: 15px;
+  }
+
+  .filtros-header {
+    padding: 12px 15px;
+
+    h3 {
+      font-size: 14px;
+    }
+
+    .toggle-btn {
+      padding: 4px 8px;
+      font-size: 11px;
+    }
+  }
+
+  .filtros-actions {
+    flex-direction: column;
+    gap: 8px;
+
+    .btn-primary, .btn-secondary {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .filtros-header {
+    h3 {
+      font-size: 13px;
+    }
+  }
+
+  .filtro-item label {
+    font-size: 12px;
+  }
+
+  .filtro-input {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+}

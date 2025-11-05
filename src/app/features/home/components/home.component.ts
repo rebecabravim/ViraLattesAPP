@@ -11,14 +11,23 @@ import { Router } from '@angular/router';
 })
 export class HomeComponent {
   protected readonly ROUTE_PATHS = ROUTE_PATHS;
+  searchTerm = '';
 
   constructor(
     private readonly router: Router,
-    private readonly authService: AuthService,
+    private readonly authService: AuthService
   ) {}
 
-  Pesquisar(): void {
-    // this.curriculoService.pesquisar();
+onSearch(): void {
+    if (!this.searchTerm.trim()) {
+      console.log('Termo de busca vazio');
+      return;
+    }
+
+    // Navegar para a página de currículos com o termo de busca
+    this.router.navigate([ROUTE_PATHS.curriculo], { 
+      queryParams: { search: this.searchTerm.trim() } 
+    });
   }
 
   navigateToCurriculos(): void {

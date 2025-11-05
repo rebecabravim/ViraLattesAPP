@@ -3,22 +3,21 @@
     <h2>Lista de Currículos</h2>
   </div>
 
-  <div class="search-section">
-    <div class="search-box">
-      <input 
-        type="text" 
-        placeholder="Buscar por nome, email ou telefone..." 
-        [(ngModel)]="searchTerm"
-        (input)="onSearch()"
-        class="search-input">
-      <button 
-        *ngIf="searchTerm" 
-        class="btn-clear" 
-        (click)="onClearSearch()"
-        title="Limpar busca">
-        X
-      </button>
-    </div>
+ 
+
+  <!-- Componente de Filtros Avançados -->
+  <app-filtros-busca
+    [isExpanded]="showFilters"
+    (filtrosChanged)="onSearchWithFilters($event)"
+    (filtrosCleared)="onClearFilters()">
+  </app-filtros-busca>
+
+  <!-- Indicador de filtros ativos -->
+  <div *ngIf="hasActiveFilters()" class="active-filters-indicator">
+    <span class="filter-badge">🔍 Filtros ativos</span>
+    <button class="btn-clear-filters" (click)="onClearFilters()">
+      Limpar todos os filtros
+    </button>
   </div>
 
   <div *ngIf="isLoading" class="loading-container">
@@ -36,7 +35,7 @@
     <div class="no-results-icon">🔍</div>
     <h3>Nenhum resultado encontrado</h3>
     <p>Não encontramos currículos que correspondam à sua busca por "{{ searchTerm }}"</p>
-    <button class="btn-secondary" (click)="onClearSearch()">
+    <button class="btn-secondary" (click)="onClearFilters()">
       Ver Todos os Currículos
     </button>
   </div>
@@ -61,6 +60,11 @@
         <div class="info-item" *ngIf="curriculo.instituicao">
           <span class="label">Instituição:</span>
           <span class="value">{{ curriculo.instituicao }}</span>
+        </div>
+        
+        <div class="info-item" *ngIf="curriculo.nacionalidade">
+          <span class="label">Nacionalidade:</span>
+          <span class="value">{{ curriculo.nacionalidade }}</span>
         </div>
         
         <div class="info-item" *ngIf="curriculo.nomeEmCitacoes">

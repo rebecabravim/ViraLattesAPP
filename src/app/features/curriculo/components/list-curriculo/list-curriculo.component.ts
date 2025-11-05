@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { CurriculoService, Curriculo, CurriculoResumo } from '../../services/curriculo.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import { CurriculoService, Curriculo, CurriculoResumo, FiltrosBusca } from '../../services/curriculo.service';
 import { CommonModule, SlicePipe } from '@angular/common';
 
 @Component({
@@ -15,66 +15,57 @@ export class ListCurriculoComponent implements OnInit {
   searchTerm = '';
   filteredCurriculos: CurriculoResumo[] = [];
   totalCount = 0;
+  filtrosAtivos: FiltrosBusca = {};
+  showFilters = false;
 
   constructor(
     private curriculoService: CurriculoService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.loadCurriculos();
-    console.log('ListCurriculoComponent initialized');
-  }
-
-  loadCurriculos(): void {
-    this.isLoading = true;
-    // Buscar todos os currículos (sem filtro)
-    this.curriculoService.getAllCurriculos().subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.curriculos = response.data.data;
-          this.filteredCurriculos = response.data.data;
-          this.totalCount = response.data.count;
-        } else {
-          console.error('Erro na resposta:', response.message);
-          this.curriculos = [];
-          this.filteredCurriculos = [];
-          this.totalCount = 0;
-        }
-        this.isLoading = false;
-      },
-      error: (error: any) => {
-        console.error('Erro ao carregar currículos:', error);
-        this.isLoading = false;
-        this.curriculos = [];
-        this.filteredCurriculos = [];
-        this.totalCount = 0;
+    // Verificar se há parâmetro de busca na URL
+    this.route.queryParams.subscribe(params => {
+      const searchParam = params['search'];
+      if (searchParam) {
+        this.searchTerm = searchParam;
+        this.onSearch();
+      } else {
       }
     });
-  }
+   }
+
+   
 
   onSearch(): void {
-    if (!this.searchTerm.trim()) {
-      this.loadCurriculos(); // Recarrega todos os currículos
-      return;
-    }
-
-    // Fazer busca na API
+    
+    // Fazer busca na API usando filtros
     this.isLoading = true;
-    this.curriculoService.searchByName(this.searchTerm.trim()).subscribe({
+    const filtros: FiltrosBusca = { nome: this.searchTerm.trim() };
+    this.onSearchWithFilters(filtros);
+  }
+ 
+  onSearchWithFilters(filtros: FiltrosBusca): void {
+    this.filtrosAtivos = filtros;
+    this.isLoading = true;
+    
+    console.log('Filtros avançados recebidos:', filtros);
+    
+    this.curriculoService.searchWithFilters(filtros).subscribe({
       next: (response) => {
         if (response.success) {
-          this.filteredCurriculos = response.data.data;
-          this.totalCount = response.data.count;
+          this.filteredCurriculos = response.data;
+          this.totalCount = response.pagination.totalRecords;
         } else {
-          console.error('Erro na busca:', response.message);
+          console.error('Erro na busca com filtros:', response.message);
           this.filteredCurriculos = [];
           this.totalCount = 0;
         }
         this.isLoading = false;
       },
       error: (error: any) => {
-        console.error('Erro ao buscar currículos:', error);
+        console.error('Erro ao buscar currículos com filtros:', error);
         this.filteredCurriculos = [];
         this.totalCount = 0;
         this.isLoading = false;
@@ -82,9 +73,13 @@ export class ListCurriculoComponent implements OnInit {
     });
   }
 
-  onClearSearch(): void {
+  onClearFilters(): void {
+    this.filtrosAtivos = {};
     this.searchTerm = '';
-    this.loadCurriculos(); // Recarrega todos os currículos
+  }
+
+  hasActiveFilters(): boolean {
+    return Object.keys(this.filtrosAtivos).length > 0;
   }
 
 
