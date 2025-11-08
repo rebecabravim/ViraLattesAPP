@@ -10,7 +10,6 @@ interface ApiResponse<T> {
   data: T;
 }
 
-// Interface para o currículo resumido que vem da API de busca
 export interface CurriculoResumo {
   id: string;
   numeroIdentificador: string;
@@ -21,7 +20,6 @@ export interface CurriculoResumo {
   resumoBreve: string;
 }
 
-// Interface para paginação
 export interface Pagination {
   totalRecords: number;
   pageNumber: number;
@@ -31,20 +29,21 @@ export interface Pagination {
   hasNextPage: boolean;
 }
 
-// Interface para filtros de busca
 export interface FiltrosBusca {
   nome?: string;
   instituicao?: string;
   temDoutorado?: boolean;
-  anoAPartirDe?: number;
+  anoAPartirDe?: string;
   linhaDePesquisa?: string;
   areaDePesquisa?: string;
-  palavrasChave?: string[]; 
-  paisDeNacionalidade?: string;
-  ehBrasileiro?: boolean;
+  palavrasChave?: string[] ; 
+  paisDeNacionalidade?: string | null;
+  ehBrasileiro?: boolean | null;
+  ehAmericaLatina?: boolean | null; 
+  assuntos?: string[];
 }
 
-// Interface para a resposta da API de busca/listagem
+
 interface ApiResponseBusca {
   success: boolean;
   message: string;
@@ -69,14 +68,11 @@ export class CurriculoService {
     };
   }
 
-  // Buscar todos os currículos (sem filtro)
   getAllCurriculos(): Observable<ApiResponseBusca> {
     return this.http.get<ApiResponseBusca>(`${this.apiUrl}`, this.getHttpOptions());
   }
 
-  // Buscar currículos com filtros avançados
   searchWithFilters(filtros: FiltrosBusca): Observable<ApiResponseBusca> {
-    // Sempre enviar pelo menos um objeto vazio para garantir que o payload não seja null
     const filtrosLimpos: any = {};
     
     if (filtros.nome?.trim()) {
@@ -90,9 +86,9 @@ export class CurriculoService {
     if (filtros.temDoutorado !== undefined && filtros.temDoutorado !== null) {
       filtrosLimpos.temDoutorado = filtros.temDoutorado;
     }
-    
-    if (filtros.anoAPartirDe && filtros.anoAPartirDe > 0) {
-      filtrosLimpos.anoAPartirDe = filtros.anoAPartirDe;
+
+    if (filtros.anoAPartirDe && filtros.anoAPartirDe !== '' && Number(filtros.anoAPartirDe) > 0) {
+      filtrosLimpos.anoAPartirDe = Number(filtros.anoAPartirDe);
     }
     
     if (filtros.linhaDePesquisa?.trim()) {
@@ -114,18 +110,16 @@ export class CurriculoService {
     if (filtros.palavrasChave && filtros.palavrasChave.length > 0) {
       filtrosLimpos.palavrasChave = filtros.palavrasChave;
     }
-
-    console.log('Filtros recebidos:', filtros);
-    console.log('Filtros limpos (payload):', filtrosLimpos);
-    console.log('URL da requisição:', `${this.apiUrl}/busca`);
+    
+    if (filtros.assuntos && filtros.assuntos.length > 0) {
+      filtrosLimpos.assuntos = filtros.assuntos;
+    }
 
     return this.http.post<ApiResponseBusca>(`${this.apiUrl}/busca`, filtrosLimpos, this.getHttpOptions());
   }
 
-  // Buscar currículo por Nome específico
  
 
-  // Buscar currículo por ID (se necessário)
   getCurriculoById(id: string): Observable<ApiResponse<Curriculo>> {
     return this.http.get<ApiResponse<Curriculo>>(`${this.apiUrl}/${id}`, this.getHttpOptions());
   }

@@ -18,18 +18,15 @@ export class SidebarComponent {
   protected readonly ROUTE_PATHS = ROUTE_PATHS;
 
   constructor(
-    public readonly sidebarService: SidebarService, // Mudei para public para debug
+    public readonly sidebarService: SidebarService, 
     private authService: AuthService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {
- 
     
     this.sidebarService.isOpen$.subscribe(open => {
- 
       this.isOpen = open;
-      this.cdr.detectChanges(); // Força detecção de mudanças
-     });
+    });
 
     this.userName = this.authService.getUserName();
    }
@@ -38,13 +35,10 @@ export class SidebarComponent {
      this.sidebarService.toggle();
   }
 
-  // Handle clicks inside the sidebar
   handleSidebarClick(event: Event) {
-    // Prevent event from bubbling to document click handler
     event.stopPropagation();
   }
 
-  // Close sidebar when clicking outside on mobile
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event) {
     if (this.isOpen && window.innerWidth <= 768) {

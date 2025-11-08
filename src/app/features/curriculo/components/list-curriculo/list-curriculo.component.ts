@@ -6,12 +6,12 @@ import { CommonModule, SlicePipe } from '@angular/common';
 @Component({
   selector: 'app-list-curriculo',
   templateUrl: './list-curriculo.component.html',
-  styleUrls: ['./list-curriculo-new.component.scss'],
+  styleUrls: ['./list-curriculo.component.scss'],
   standalone: false,
 })
 export class ListCurriculoComponent implements OnInit {
   curriculos: CurriculoResumo[] = [];
-  isLoading = true;
+  isLoading = false;
   searchTerm = '';
   filteredCurriculos: CurriculoResumo[] = [];
   totalCount = 0;
@@ -25,7 +25,6 @@ export class ListCurriculoComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Verificar se há parâmetro de busca na URL
     this.route.queryParams.subscribe(params => {
       const searchParam = params['search'];
       if (searchParam) {
@@ -40,7 +39,6 @@ export class ListCurriculoComponent implements OnInit {
 
   onSearch(): void {
     
-    // Fazer busca na API usando filtros
     this.isLoading = true;
     const filtros: FiltrosBusca = { nome: this.searchTerm.trim() };
     this.onSearchWithFilters(filtros);
@@ -76,6 +74,9 @@ export class ListCurriculoComponent implements OnInit {
   onClearFilters(): void {
     this.filtrosAtivos = {};
     this.searchTerm = '';
+    this.filteredCurriculos = [];
+    this.totalCount = 0;
+    this.isLoading = false;
   }
 
   hasActiveFilters(): boolean {

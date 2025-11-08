@@ -1,18 +1,14 @@
 <div class="list-curriculo-container">
-  <div class="header">
-    <h2>Lista de Currículos</h2>
-  </div>
+
 
  
 
-  <!-- Componente de Filtros Avançados -->
   <app-filtros-busca
     [isExpanded]="showFilters"
     (filtrosChanged)="onSearchWithFilters($event)"
     (filtrosCleared)="onClearFilters()">
   </app-filtros-busca>
 
-  <!-- Indicador de filtros ativos -->
   <div *ngIf="hasActiveFilters()" class="active-filters-indicator">
     <span class="filter-badge">🔍 Filtros ativos</span>
     <button class="btn-clear-filters" (click)="onClearFilters()">
@@ -28,7 +24,6 @@
   <div *ngIf="!isLoading && filteredCurriculos.length === 0 && !searchTerm" class="empty-state">
     <div class="empty-icon">📄</div>
     <h3>Nenhum currículo encontrado</h3>
-    <p>Não há currículos cadastrados no sistema</p>
   </div>
 
   <div *ngIf="!isLoading && filteredCurriculos.length === 0 && searchTerm" class="no-results">
