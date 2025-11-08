@@ -75,4 +75,8 @@ export class LoginComponent {
   togglePasswordVisibility() {
     this.hidePassword = !this.hidePassword;
   }
+
+  goToRegister() {
+    this.router.navigate([ROUTE_PATHS.register]);
+  }
 }

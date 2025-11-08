@@ -140,20 +140,28 @@ button[type="submit"] {
 
 /* Footer links */
 .login-footer {
-  margin-top: 1rem;
+  margin-top: 1.5rem;
+  text-align: center;
 }
 
-.login-footer a {
-  display: block;
-  text-align: center;
-  padding: 0.5rem 0;
+.register-link {
+  background: none;
+  border: none;
+  color: #666;
   font-size: 0.9rem;
-  text-decoration: none;
+  cursor: pointer;
+  padding: 0.75rem 0;
+  width: 100%;
+  transition: color 0.2s ease;
+}
+
+.register-link:hover {
   color: #1565c0;
 }
 
-.login-footer a:hover {
-  text-decoration: underline;
+.register-link strong {
+  color: #1565c0;
+  font-weight: 600;
 }
 
 /* Responsive tweaks */
