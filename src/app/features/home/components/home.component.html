@@ -1,30 +1,37 @@
-<main>
-  <div class="header">
-    <h1>ViraLattes!</h1>
-    <div class="subtitle-bar"></div>
-  </div>
-
-  <div class="main-box">
-    <div class="content-container">
-      <div class="search-container">
-        <input 
-          type="text" 
-          placeholder="Pesquisar currículos..." 
-          [(ngModel)]="searchTerm"
-          (keyup.enter)="onSearch()"
-          class="search-input">
-        <button 
-          class="search-btn" 
-          (click)="onSearch()"
-          [disabled]="!searchTerm || !searchTerm.trim()">
-          🔍 Buscar
-        </button>
-      </div>
- 
+<div class="app-layout">
+  <app-sidebar></app-sidebar>
+  
+  <main class="main-content">
+    <div class="header">
+      <h1>ViraLattes!</h1>
+      <div class="subtitle-bar"></div>
     </div>
-  </div>
+
+    <div class="main-box">
+      <div class="content-container">
+        <div class="search-container">
+          <input 
+            type="text" 
+            placeholder="Pesquisar currículos..." 
+            [(ngModel)]="searchTerm"
+            (keyup.enter)="onSearch()"
+            class="search-input">
+          <button 
+            class="search-btn" 
+            (click)="onSearch()"
+            [disabled]="!searchTerm || !searchTerm.trim()">
+            🔍 Buscar
+          </button>
+          <button 
+            class="filter-btn" 
+            (click)="navigateToCurriculos()">
+            Filtros
+          </button>
+        </div>
+   
+      </div>
+    </div>
+   
  
-  <div class="action-box">
-    <button class="action-btn" (click)="onLogout()" style="background-color: #d9534f">Sair</button>
-  </div>
-</main>
+  </main>
+</div>

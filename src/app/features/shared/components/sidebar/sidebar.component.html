@@ -11,7 +11,12 @@
   <div class="user-info" *ngIf="isOpen">
     <p class="greeting">Olá, {{ userName }}!</p>
     <div class="action-buttons">
-      <button class="logout-button" (click)="logout()">Sair</button>
+      <button class="logout-button" (click)="routeTo('home')">🏠 Home</button>
+      <button class="logout-button" (click)="routeTo('curriculo')">🔍 Pesquisar</button>
+      <button class="logout-button" (click)="routeTo('curriculo/meu-curriculo')">👤 Meu Currículo</button>
+      <button class="logout-button" (click)="routeTo('curriculo/favoritos')">⭐ Favoritos</button>
+      <button class="logout-button" (click)="routeTo('curriculo/historico')">🕒 Histórico</button>
+      <button class="logout-button logout-btn-danger" (click)="logout()">🚪 Sair</button>
     </div>
   </div>
 </div>

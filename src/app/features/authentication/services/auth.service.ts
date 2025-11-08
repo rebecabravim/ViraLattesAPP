@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { LoaderService } from '../../shared/services/loader.service';
 import { LoginModel } from '../models/login.model';
+import { RegisterRequest } from '../models/register.model';
 import { ApiResponse } from '../../../core/shared/api-response.model';
 import { AuthResultModel } from '../models/auth-result.model';
 
@@ -24,8 +25,8 @@ export class AuthService {
     return this.http.post<ApiResponse<AuthResultModel>>(`${this.API_URL}/Auth/LoginUser`, loginDto);
   }
 
-  public register(loginDto: LoginModel): Observable<ApiResponse<AuthResultModel>> {
-    return this.http.post<ApiResponse<AuthResultModel>>(`${this.API_URL}/Auth/RegisterUser`, loginDto);
+  public register(registerDto: RegisterRequest): Observable<ApiResponse<AuthResultModel>> {
+    return this.http.post<ApiResponse<AuthResultModel>>(`${this.API_URL}/Auth/RegisterUser`, registerDto);
   }
 
   public deleteUser(userId: string): Observable<ApiResponse<string>> {
@@ -61,6 +62,7 @@ export class AuthService {
     localStorage.removeItem('token');
     localStorage.removeItem('userName');
     localStorage.removeItem('userId');
+    localStorage.removeItem('idMeuCurriculo');
   }
 
   public logout(): void {

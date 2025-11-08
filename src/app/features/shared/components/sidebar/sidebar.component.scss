@@ -134,9 +134,16 @@
       }
 
       .logout-button {
-        background-color: #ef4444;
+        background-color: #475569; // Cor padrão para botões de navegação
         &:hover {
-          background-color: #dc2626;
+          background-color: #334155;
+        }
+
+        &.logout-btn-danger {
+          background-color: #ef4444;
+          &:hover {
+            background-color: #dc2626;
+          }
         }
       }
     }

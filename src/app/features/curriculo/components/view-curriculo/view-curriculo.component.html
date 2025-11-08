@@ -1,25 +1,214 @@
-<div class="view-curriculo-container">
+<div class="min-h-screen flex flex-col">
+  <!-- Loading State -->
   <div *ngIf="isLoading" class="loading-container">
     <div class="spinner"></div>
     <p>Carregando currículo...</p>
   </div>
 
-  <div *ngIf="!isLoading && curriculo" class="curriculo-content">
-    <!-- Cabeçalho com ações -->
-    <div class="header-actions no-print">
-      <button class="btn-back" (click)="onBack()">
-        ← Voltar à Lista
-      </button>
-    </div>
+  <!-- Main Content -->
+  <div *ngIf="!isLoading && curriculo" class="curriculo-layout">
+    <!-- Header -->
+    <header class="curriculo-header">
+      <div class="container">
+        <div class="header-content">
+          <button class="btn-back" (click)="onBack()">
+            <span class="back-icon">←</span>
+          </button>
+          <div class="app-title">ViraLattes</div>
+        </div>
+      </div>
+    </header>
 
-    <!-- Conteúdo do currículo -->
-    <div class="curriculo-document">
-      <!-- Cabeçalho do currículo -->
-      <header class="curriculo-header">
-        <!-- <h1>{{ curriculo.nome }}</h1> -->
- 
-      </header>
+    <main class="main-content">
+      <!-- Profile Header Card -->
+      <div class="profile-card">
+        <div class="profile-content">
+          <div class="profile-avatar">
+            <span class="avatar-icon">👤</span>
+          </div>
+          <div class="profile-info">
+            <div class="profile-names">
+              <div class="name-with-favorite">
+                <h1 class="profile-name">{{ curriculo.identificacao.nomeCompleto }}</h1>
+                <button 
+                  class="favorite-btn" 
+                  [class.favorited]="isFavorited"
+                  (click)="toggleFavorite()"
+                  [disabled]="isTogglingFavorite"
+                  title="{{ isFavorited ? 'Remover dos favoritos' : 'Adicionar aos favoritos' }}">
+                  <span class="star-icon">{{ isFavorited ? '★' : '☆' }}</span>
+                </button>
+              </div>
+              <p class="profile-citation">{{ curriculo.identificacao.nomeEmCitacoesBibliograficas }}</p>
+            </div>
+            
+            <div class="profile-details">
+              <div class="detail-item">
+                <span class="detail-icon">📍</span>
+                <span class="detail-text">{{ curriculo.identificacao.paisDeNacionalidade }}</span>
+              </div>
+              <div class="detail-item" *ngIf="curriculo.dadosGerais.endereco">
+                <span class="detail-icon">🏢</span>
+                <span class="detail-text">{{ curriculo.dadosGerais.endereco.nomeInstituicaoEmpresa }}</span>
+              </div>
+            </div>
 
+            <div class="profile-badges">
+              <span class="badge">ID: {{ curriculo.identificacao.numeroIdentificador }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accordion Content -->
+      <div class="accordion-container">
+        <!-- Resumo -->
+        <div class="accordion-item" [class.active]="activeSection === 'resumo'">
+          <div class="accordion-header" (click)="toggleSection('resumo')">
+            <div class="accordion-title">
+              <span class="accordion-icon">📖</span>
+              <span class="accordion-text">Resumo</span>
+            </div>
+            <span class="accordion-arrow" [class.rotated]="activeSection === 'resumo'">▼</span>
+          </div>
+          <div class="accordion-content" *ngIf="activeSection === 'resumo'">
+            <p class="resumo-text">{{ curriculo.dadosGerais.textoResumoCvRh }}</p>
+          </div>
+        </div>
+
+        <!-- Formação Acadêmica -->
+        <div class="accordion-item" [class.active]="activeSection === 'formacao'">
+          <div class="accordion-header" (click)="toggleSection('formacao')">
+            <div class="accordion-title">
+              <span class="accordion-icon">🎓</span>
+              <span class="accordion-text">Formação Acadêmica</span>
+            </div>
+            <span class="accordion-arrow" [class.rotated]="activeSection === 'formacao'">▼</span>
+          </div>
+          <div class="accordion-content" *ngIf="activeSection === 'formacao'">
+            <div class="formacao-list">
+              <div *ngFor="let formacao of curriculo.dadosGerais.formacoesAcademicas; let i = index" class="formacao-item">
+                <div *ngIf="i > 0" class="separator"></div>
+                <div class="formacao-header">
+                  <h3 class="formacao-title">{{ formacao.tipo }} - {{ formacao.nomeCurso }}</h3>
+                  <span class="formacao-year">{{ formacao.anoDeConclusao || formacao.anoDeInicio }}</span>
+                </div>
+                <p class="formacao-institution">{{ formacao.nomeInstituicao }}</p>
+                <p *ngIf="formacao.tituloTrabalho" class="formacao-work">
+                  Trabalho: {{ formacao.tituloTrabalho }}
+                </p>
+                <p *ngIf="formacao.nomeOrientador" class="formacao-advisor">
+                  Orientador: {{ formacao.nomeOrientador }}
+                </p>
+              </div>
+
+              <!-- Pós-Doutorado -->
+              <div *ngIf="curriculo.dadosGerais.posDoutorados.length > 0" class="pos-doc-section">
+                <div class="separator"></div>
+                <h4 class="section-subtitle">Pós-Doutorado</h4>
+                <div *ngFor="let posDoc of curriculo.dadosGerais.posDoutorados" class="formacao-item">
+                  <div class="formacao-header">
+                    <h3 class="formacao-title">{{ posDoc.nomeCurso }}</h3>
+                    <span class="formacao-year">{{ posDoc.anoDeConclusao || posDoc.anoDeInicio }}</span>
+                  </div>
+                  <p class="formacao-institution">{{ posDoc.nomeInstituicao }}</p>
+                  <p *ngIf="posDoc.tituloTrabalho" class="formacao-work">
+                    Trabalho: {{ posDoc.tituloTrabalho }}
+                  </p>
+                  <p *ngIf="posDoc.nomeOrientador" class="formacao-advisor">
+                    Orientador: {{ posDoc.nomeOrientador }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Linhas de Pesquisa -->
+        <div class="accordion-item" [class.active]="activeSection === 'pesquisa'">
+          <div class="accordion-header" (click)="toggleSection('pesquisa')">
+            <div class="accordion-title">
+              <span class="accordion-icon">🔬</span>
+              <span class="accordion-text">Linhas de Pesquisa</span>
+            </div>
+            <span class="accordion-arrow" [class.rotated]="activeSection === 'pesquisa'">▼</span>
+          </div>
+          <div class="accordion-content" *ngIf="activeSection === 'pesquisa'">
+            <div class="pesquisa-list">
+              <div *ngFor="let linha of curriculo.dadosGerais.linhasDePesquisa" class="pesquisa-item">
+                <span class="pesquisa-badge">{{ linha.titulo }}</span>
+              </div>
+            </div>
+            
+            <!-- Projetos de Pesquisa -->
+            <div *ngIf="curriculo.dadosGerais.projetosDePesquisa.length > 0" class="projetos-section">
+              <div class="separator"></div>
+              <h4 class="section-subtitle">Projetos de Pesquisa</h4>
+              <ul class="projetos-list">
+                <li *ngFor="let projeto of curriculo.dadosGerais.projetosDePesquisa" class="projeto-item">
+                  <strong>{{ projeto.nomeProjeto }}</strong>
+                  <p class="projeto-desc">{{ projeto.descricao }}</p>
+                  <span class="projeto-status">{{ projeto.situacao }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Produção Científica -->
+        <div class="accordion-item" [class.active]="activeSection === 'producao'">
+          <div class="accordion-header" (click)="toggleSection('producao')">
+            <div class="accordion-title">
+              <span class="accordion-icon">🏆</span>
+              <span class="accordion-text">Produção Científica</span>
+            </div>
+            <span class="accordion-arrow" [class.rotated]="activeSection === 'producao'">▼</span>
+          </div>
+          <div class="accordion-content" *ngIf="activeSection === 'producao' && curriculo.producoes">
+            <div class="producao-sections">
+              <!-- Artigos -->
+              <div *ngIf="curriculo.producoes.artigos.length > 0" class="producao-section">
+                <h4 class="section-subtitle">Artigos em Periódicos</h4>
+                <div *ngFor="let artigo of curriculo.producoes.artigos; let i = index" class="producao-item">
+                  <div *ngIf="i > 0" class="separator"></div>
+                  <div class="producao-header">
+                    <h3 class="producao-title">{{ artigo.tituloPeriodicoRevista }}</h3>
+                  </div>
+                  <p class="producao-journal">{{ artigo.tituloPeriodicoRevista }}</p>
+                  <div class="producao-authors">
+                    <span *ngFor="let autor of artigo.autores; let last = last">
+                      {{ autor.nomeCompleto }}<span *ngIf="!last">, </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Livros -->
+              <div *ngIf="curriculo.producoes.livrosPublicadosOrganizados.length > 0" class="producao-section">
+                <div class="separator"></div>
+                <h4 class="section-subtitle">Livros Publicados</h4>
+                <div *ngFor="let livro of curriculo.producoes.livrosPublicadosOrganizados; let i = index" class="producao-item">
+                  <div *ngIf="i > 0" class="separator"></div>
+                  <div class="producao-header">
+                    <h3 class="producao-title">{{ livro.titulo }}</h3>
+                    <span class="producao-year">{{ livro.ano }}</span>
+                  </div>
+                  <p class="producao-publisher">{{ livro.nomeEditora }}</p>
+                  <div class="producao-authors">
+                    <span *ngFor="let autor of livro.autores; let last = last">
+                      {{ autor.nomeCompleto }}<span *ngIf="!last">, </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Error State -->
   <div *ngIf="!isLoading && !curriculo" class="error-state">
     <div class="error-icon">❌</div>
     <h3>Currículo não encontrado</h3>

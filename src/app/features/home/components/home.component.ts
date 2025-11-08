@@ -31,6 +31,7 @@ onSearch(): void {
   }
 
   navigateToCurriculos(): void {
+    console.log('Navegando para currículos');
     this.router.navigate([ROUTE_PATHS.curriculo]);
   }
 

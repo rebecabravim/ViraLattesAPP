@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { Curriculo } from '../models/curriculo.models';
+import { AuthService } from '../../authentication/services/auth.service';
 
 interface ApiResponse<T> {
   success: boolean;
@@ -56,15 +57,32 @@ interface ApiResponseBusca {
 })
 export class CurriculoService {
   private readonly apiUrl = `${environment.apiUrl}/Curriculo`;
+  private readonly userApiUrl = `${environment.apiUrl}/User`;
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
 
-  constructor(private http: HttpClient) {}
+  private getAuthToken(): string | null {
+    return this.authService.getToken();
+  }
+
+  private isAuthenticated(): boolean {
+    return this.authService.isLoggedIn();
+  }
 
   private getHttpOptions() {
+    const headers: any = {
+      'Content-Type': 'application/json'
+    };
+
+    const token = this.getAuthToken();
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
     return {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        // 'Authorization': `Bearer ${this.getAuthToken()}`
-      })
+      headers: new HttpHeaders(headers)
     };
   }
 
@@ -122,6 +140,76 @@ export class CurriculoService {
 
   getCurriculoById(id: string): Observable<ApiResponse<Curriculo>> {
     return this.http.get<ApiResponse<Curriculo>>(`${this.apiUrl}/${id}`, this.getHttpOptions());
+  }
+
+  // Métodos para Favoritos
+  getFavoritos(userId: string): Observable<ApiResponse<CurriculoResumo[]>> {
+    if (!this.isAuthenticated()) {
+      throw new Error('Usuário não autenticado para acessar favoritos');
+    }
+    
+    if (!userId) {
+      throw new Error('ID do usuário é obrigatório');
+    }
+
+    
+
+    return this.http.get<ApiResponse<CurriculoResumo[]>>(`${this.apiUrl}/favoritos/${userId}`, this.getHttpOptions());
+  }
+
+  removeFavorito(userId: string, curriculoId: string): Observable<ApiResponse<any>> {
+    if (!this.isAuthenticated()) {
+      throw new Error('Usuário não autenticado para remover favoritos');
+    }
+    
+    if (!userId || !curriculoId) {
+      throw new Error('ID do usuário e ID do currículo são obrigatórios');
+    }
+
+    return this.http.delete<ApiResponse<any>>(`${this.apiUrl}/favoritos/${userId}/${curriculoId}`, this.getHttpOptions());
+  }
+
+  addFavorito(userId: string, curriculoId: string): Observable<ApiResponse<any>> {
+    if (!this.isAuthenticated()) {
+      throw new Error('Usuário não autenticado para adicionar favoritos');
+    }
+    
+    if (!userId || !curriculoId) {
+      throw new Error('ID do usuário e ID do currículo são obrigatórios');
+    }
+
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/favoritos/${userId}`, {curriculoId}, this.getHttpOptions());
+  }
+
+  vincularMeuCurriculo(userId: string, curriculoId: string): Observable<ApiResponse<any>> {
+    if (!this.isAuthenticated()) {
+      throw new Error('Usuário não autenticado para vincular currículo');
+    }
+    
+    if (!userId || !curriculoId) {
+      throw new Error('ID do usuário e ID do currículo são obrigatórios');
+    }
+
+    const userApiUrl = `${environment.apiUrl}/User`;
+    return this.http.put<ApiResponse<any>>(`${userApiUrl}/${userId}/meu-curriculo`, { curriculoId }, this.getHttpOptions());
+  }
+
+  desvincularMeuCurriculo(userId: string): Observable<ApiResponse<any>> {
+    if (!this.isAuthenticated()) {
+      throw new Error('Usuário não autenticado para desvincular currículo');
+    }
+    
+    if (!userId) {
+      throw new Error('ID do usuário é obrigatório');
+    }
+
+    const userApiUrl = `${environment.apiUrl}/User`;
+    return this.http.delete<ApiResponse<any>>(`${userApiUrl}/${userId}/meu-curriculo`, this.getHttpOptions());
+  }
+
+  buscarCurriculoPorNome(nome: string): Observable<ApiResponseBusca> {
+    const filtros: FiltrosBusca = { nome: nome.trim() };
+    return this.searchWithFilters(filtros);
   }
 }
 

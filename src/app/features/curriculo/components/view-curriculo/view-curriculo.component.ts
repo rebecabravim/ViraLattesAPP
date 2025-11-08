@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CurriculoService, Curriculo } from '../../services/curriculo.service';
+import { CurriculoService, Curriculo, CurriculoResumo } from '../../services/curriculo.service';
+import { AuthService } from '../../../authentication/services/auth.service';
+import { HistoricoComponent } from '../historico/historico.component';
 
 @Component({
   selector: 'app-view-curriculo',
@@ -13,11 +15,17 @@ export class ViewCurriculoComponent implements OnInit {
   curriculoId!: string;
   isLoading = true;
   isDeleting = false;
+  activeSection: string = 'resumo'; // Seção ativa por padrão
+  
+  // Favoritos
+  isFavorited = false;
+  isTogglingFavorite = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private curriculoService: CurriculoService
+    private curriculoService: CurriculoService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -31,6 +39,7 @@ export class ViewCurriculoComponent implements OnInit {
       next: (response) => {
         if (response.success) {
           this.curriculo = response.data;
+          this.addToHistorico(); // Adiciona ao histórico quando carregado com sucesso
         } else {
           console.error('Erro na resposta:', response.message);
           this.router.navigate(['/curriculo']);
@@ -63,6 +72,82 @@ export class ViewCurriculoComponent implements OnInit {
 
   onBack(): void {
     this.router.navigate(['/curriculo']);
+  }
+
+  toggleSection(section: string): void {
+    this.activeSection = this.activeSection === section ? '' : section;
+  }
+
+  toggleFavorite(): void {
+    const userId = this.authService.getUserId();
+    if (!userId) {
+      console.error('Usuário não logado');
+      return;
+    }
+
+    if (this.isTogglingFavorite) {
+      return; // Evitar múltiplos cliques
+    }
+
+    this.isTogglingFavorite = true;
+
+    if (this.isFavorited) {
+      this.removeFavorite(userId);
+    } else {
+      this.addFavorite(userId);
+    }
+  }
+
+  private addFavorite(userId: string): void {
+    this.curriculoService.addFavorito(userId, this.curriculoId).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.isFavorited = true;
+          console.log('Currículo adicionado aos favoritos');
+        } else {
+          console.error('Erro ao adicionar aos favoritos:', response.message);
+        }
+        this.isTogglingFavorite = false;
+      },
+      error: (error) => {
+        console.error('Erro ao adicionar aos favoritos:', error);
+        this.isTogglingFavorite = false;
+      }
+    });
+  }
+
+  private removeFavorite(userId: string): void {
+    this.curriculoService.removeFavorito(userId, this.curriculoId).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.isFavorited = false;
+          console.log('Currículo removido dos favoritos');
+        } else {
+          console.error('Erro ao remover dos favoritos:', response.message);
+        }
+        this.isTogglingFavorite = false;
+      },
+      error: (error) => {
+        console.error('Erro ao remover dos favoritos:', error);
+        this.isTogglingFavorite = false;
+      }
+    });
+  }
+
+  private addToHistorico(): void {
+    if (this.curriculo && this.curriculo.id) {
+      const curriculoResumo: CurriculoResumo = {
+        id: this.curriculo.id,
+        numeroIdentificador: this.curriculo.numeroIdentificador,
+        nomeCompleto: this.curriculo.identificacao?.nomeCompleto || 'Nome não disponível',
+        nomeEmCitacoes: this.curriculo.identificacao?.nomeEmCitacoesBibliograficas || '',
+        nacionalidade: this.curriculo.identificacao?.paisDeNacionalidade || '',
+        instituicao: this.curriculo.dadosGerais?.endereco?.nomeInstituicaoEmpresa || '',
+        resumoBreve: this.curriculo.dadosGerais?.textoResumoCvRh || ''
+      };
+      
+      HistoricoComponent.addToHistorico(curriculoResumo);
+    }
   }
 
  
