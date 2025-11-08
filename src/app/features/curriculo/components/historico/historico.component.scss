@@ -1,0 +1,63 @@
+.historico-container {
+  min-height: 100vh;
+  background: #f8fafc;
+  padding: 20px 0;
+}
+
+.historico-header {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-clear-all {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-clear-all:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.btn-clear-all:active {
+  transform: translateY(0);
+}
+
+/* Customizações específicas para histórico */
+.historico-container ::ng-deep .curriculo-list-simple-container {
+  background: transparent;
+}
+
+.historico-container ::ng-deep .list-title {
+  color: #059669;
+}
+
+.historico-container ::ng-deep .empty-icon {
+  color: #6b7280;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .historico-header {
+    padding: 0 16px 16px;
+  }
+  
+  .btn-clear-all {
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+}

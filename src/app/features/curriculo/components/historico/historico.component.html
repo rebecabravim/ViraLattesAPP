@@ -1,0 +1,19 @@
+<div class="historico-container">
+  <div class="historico-header">
+    <button 
+      *ngIf="!isLoading && historico.length > 0" 
+      class="btn-clear-all" 
+      (click)="clearHistorico()"
+      title="Limpar todo o histórico">
+      🗑️ Limpar Histórico
+    </button>
+  </div>
+  
+  <app-curriculo-list-simple
+    [curriculos]="historico"
+    [isLoading]="isLoading"
+    [config]="listConfig"
+    (viewCurriculo)="onViewCurriculo($event)"
+    (removeCurriculo)="onRemoveFromHistorico($event)">
+  </app-curriculo-list-simple>
+</div>

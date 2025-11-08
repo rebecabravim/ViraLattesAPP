@@ -1,0 +1,279 @@
+.curriculo-list-simple-container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.list-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #2d3748;
+  margin: 0;
+}
+
+.list-count {
+  background: #667eea;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Loading State */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e2e8f0;
+  border-top: 4px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #718096;
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.empty-state h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #4a5568;
+  margin-bottom: 8px;
+}
+
+.empty-state p {
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Curriculos List */
+.curriculos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.curriculo-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  border: 1px solid #e2e8f0;
+}
+
+.curriculo-item:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+  border-color: #667eea;
+}
+
+.curriculo-content {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 16px;
+}
+
+.curriculo-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.avatar-icon {
+  font-size: 24px;
+  color: white;
+}
+
+.curriculo-info {
+  flex: 1;
+}
+
+.curriculo-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2d3748;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+}
+
+.curriculo-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.curriculo-id {
+  font-size: 13px;
+  color: #718096;
+  background: #f7fafc;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.curriculo-institution {
+  font-size: 13px;
+  color: #4a5568;
+  font-weight: 500;
+}
+
+.curriculo-resume {
+  font-size: 14px;
+  color: #718096;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Actions */
+.curriculo-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.btn-action {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.btn-view {
+  color: #667eea;
+  border-color: #667eea;
+}
+
+.btn-view:hover {
+  background: #667eea;
+  color: white;
+}
+
+.btn-remove {
+  color: #e53e3e;
+  border-color: #e53e3e;
+}
+
+.btn-remove:hover {
+  background: #e53e3e;
+  color: white;
+}
+
+.btn-action .icon {
+  font-size: 14px;
+}
+
+.btn-action .text {
+  font-size: 13px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .curriculo-list-simple-container {
+    padding: 16px;
+  }
+
+  .list-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .list-title {
+    font-size: 20px;
+  }
+
+  .curriculo-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .curriculo-content {
+    width: 100%;
+  }
+
+  .curriculo-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .curriculo-details {
+    flex-direction: column;
+    gap: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .curriculo-list-simple-container {
+    padding: 12px;
+  }
+
+  .curriculo-name {
+    font-size: 16px;
+  }
+
+  .curriculo-actions {
+    justify-content: center;
+  }
+
+  .btn-action .text {
+    display: none;
+  }
+
+  .btn-action {
+    padding: 10px;
+    min-width: 40px;
+    justify-content: center;
+  }
+}

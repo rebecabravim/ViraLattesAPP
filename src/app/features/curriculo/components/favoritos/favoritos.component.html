@@ -1,0 +1,9 @@
+<div class="favoritos-container">
+  <app-curriculo-list-simple
+    [curriculos]="favoritos"
+    [isLoading]="isLoading"
+    [config]="listConfig"
+    (viewCurriculo)="onViewCurriculo($event)"
+    (removeCurriculo)="onRemoveFavorito($event)">
+  </app-curriculo-list-simple>
+</div>

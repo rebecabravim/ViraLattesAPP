@@ -1,0 +1,18 @@
+.favoritos-container {
+  min-height: 100vh;
+  background: #f8fafc;
+  padding: 20px 0;
+}
+
+/* Customizações específicas para favoritos se necessário */
+.favoritos-container ::ng-deep .curriculo-list-simple-container {
+  background: transparent;
+}
+
+.favoritos-container ::ng-deep .list-title {
+  color: #667eea;
+}
+
+.favoritos-container ::ng-deep .empty-icon {
+  color: #fbbf24;
+}

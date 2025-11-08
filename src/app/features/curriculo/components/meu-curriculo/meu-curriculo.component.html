@@ -1,0 +1,173 @@
+<div class="meu-curriculo-container">
+  <div class="header">
+    <h1 class="title">Meu Currículo</h1>
+    <p class="subtitle">Gerencie a vinculação do seu currículo pessoal</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="state.isLoading" class="loading-section">
+    <div class="spinner"></div>
+    <p>Verificando seu currículo...</p>
+  </div>
+
+  <!-- Currículo Já Vinculado -->
+  <div *ngIf="!state.isLoading && state.hasVinculo && state.curriculo" class="curriculo-vinculado">
+    <div class="success-banner">
+      <span class="success-icon">✅</span>
+      <div>
+        <h3>Seu currículo está vinculado!</h3>
+        <p>Você pode visualizar ou desvincular seu currículo abaixo.</p>
+      </div>
+    </div>
+
+    <div class="curriculo-card">
+      <div class="curriculo-info">
+        <div class="curriculo-avatar">
+          <span class="avatar-icon">👤</span>
+        </div>
+        <div class="curriculo-details">
+          <h3 class="curriculo-name">{{ state.curriculo.identificacao.nomeCompleto || 'Nome não disponível' }}</h3>
+          <p class="curriculo-id">ID: {{ state.curriculo.numeroIdentificador }}</p>
+          <p class="curriculo-institution" *ngIf="state.curriculo.dadosGerais.endereco.nomeInstituicaoEmpresa">
+            {{ state.curriculo.dadosGerais.endereco.nomeInstituicaoEmpresa }}
+          </p>
+          <p class="curriculo-resume" *ngIf="state.curriculo.dadosGerais.textoResumoCvRh">
+            {{ state.curriculo.dadosGerais.textoResumoCvRh | slice:0:150 }}{{ state.curriculo.dadosGerais.textoResumoCvRh.length > 150 ? '...' : '' }}
+          </p>
+        </div>
+      </div>
+
+      <div class="curriculo-actions">
+        <button 
+          class="btn btn-primary" 
+          (click)="onViewCurriculo(state.curriculo.id!)"
+          title="Visualizar currículo completo">
+          <span class="btn-icon">👁️</span>
+          Ver Detalhes
+        </button>
+        
+        <button 
+          class="btn btn-danger" 
+          (click)="onDesvincularCurriculo()"
+          [disabled]="state.isDesvinculando"
+          title="Desvincular este currículo">
+          <span *ngIf="!state.isDesvinculando" class="btn-icon">🗑️</span>
+          <span *ngIf="state.isDesvinculando" class="spinner-small"></span>
+          {{ state.isDesvinculando ? 'Desvinculando...' : 'Desvincular' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sem Currículo Vinculado -->
+  <div *ngIf="!state.isLoading && !state.hasVinculo" class="sem-curriculo">
+    <div class="search-section">
+      <div class="search-header">
+        <h3>Buscar Meu Currículo</h3>
+        <p>Digite seu nome para encontrar seu currículo na plataforma:</p>
+      </div>
+
+      <div class="search-form">
+        <div class="search-input-group">
+          <input
+            type="text"
+            class="search-input"
+            [(ngModel)]="state.searchTerm"
+            placeholder="Digite seu nome completo"
+            (keyup.enter)="onSearch()"
+            [disabled]="state.isSearching"
+          />
+          <button 
+            class="btn-search" 
+            (click)="onSearch()"
+            [disabled]="state.isSearching || !state.searchTerm.trim()">
+            <span *ngIf="!state.isSearching" class="search-icon">🔍</span>
+            <span *ngIf="state.isSearching" class="spinner-small"></span>
+            {{ state.isSearching ? 'Buscando...' : 'Buscar' }}
+          </button>
+        </div>
+
+        <button 
+          *ngIf="state.searchResults.length > 0" 
+          class="btn-clear" 
+          (click)="clearSearch()">
+          Limpar Busca
+        </button>
+      </div>
+    </div>
+
+    <!-- Resultados da Busca -->
+    <div *ngIf="state.searchResults.length > 0" class="search-results">
+      <div class="results-header">
+        <h4>Resultados da Busca</h4>
+        <p>Selecione o currículo que corresponde ao seu:</p>
+      </div>
+
+      <div class="curriculo-list">
+        <div *ngFor="let curriculo of state.searchResults; trackBy: trackByCurriculoId" class="curriculo-item">
+          <div class="curriculo-content">
+            <div class="curriculo-avatar-small">
+              <span class="avatar-icon">👤</span>
+            </div>
+            <div class="curriculo-info-compact">
+              <h4 class="curriculo-name">{{ curriculo.nomeCompleto }}</h4>
+              <p class="curriculo-id">ID: {{ curriculo.numeroIdentificador }}</p>
+              <p class="curriculo-institution" *ngIf="curriculo.instituicao">
+                {{ curriculo.instituicao }}
+              </p>
+              <p class="curriculo-resume" *ngIf="curriculo.resumoBreve">
+                {{ curriculo.resumoBreve | slice:0:100 }}{{ curriculo.resumoBreve.length > 100 ? '...' : '' }}
+              </p>
+            </div>
+          </div>
+
+          <div class="curriculo-item-actions">
+            <button 
+              class="btn btn-outline" 
+              (click)="onViewCurriculo(curriculo.id)"
+              title="Visualizar antes de vincular">
+              <span class="btn-icon">👁️</span>
+              Visualizar
+            </button>
+            
+            <button 
+              class="btn btn-success" 
+              (click)="onVincularCurriculo(curriculo.id)"
+              [disabled]="state.isVinculando"
+              title="Vincular este currículo à sua conta">
+              <span *ngIf="!state.isVinculando" class="btn-icon">✅</span>
+              <span *ngIf="state.isVinculando" class="spinner-small"></span>
+              {{ state.isVinculando ? 'Vinculando...' : 'Este é Meu Currículo' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estado Vazio -->
+    <div *ngIf="!state.isSearching && state.searchResults.length === 0 && !state.errorMessage" class="empty-state">
+      <div class="empty-icon">📄</div>
+      <h3>Encontre Seu Currículo</h3>
+      <p>Digite seu nome no campo acima para buscar seu currículo na plataforma.</p>
+      <div class="help-info">
+        <h4>Dicas:</h4>
+        <ul>
+          <li>Use seu nome completo como cadastrado</li>
+          <li>Verifique se não há erros de digitação</li>
+          <li>Se não encontrar, o currículo pode não estar cadastrado ainda</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mensagens -->
+  <div *ngIf="state.errorMessage" class="message error-message">
+    <span class="message-icon">❌</span>
+    <span class="message-text">{{ state.errorMessage }}</span>
+  </div>
+
+  <div *ngIf="state.successMessage" class="message success-message">
+    <span class="message-icon">✅</span>
+    <span class="message-text">{{ state.successMessage }}</span>
+  </div>
+</div>
