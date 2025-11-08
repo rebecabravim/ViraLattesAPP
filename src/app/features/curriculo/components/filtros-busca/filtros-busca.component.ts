@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FiltrosBusca } from '../../services/curriculo.service';
+import { CountriesService } from '../../../shared/services/countries.service';
 
 @Component({
   selector: 'app-filtros-busca',
@@ -15,11 +16,42 @@ export class FiltrosBuscaComponent {
   filtros: FiltrosBusca = {};
   palavrasChaveText = '';
   currentYear = new Date().getFullYear();
+  
+  availableYears: number[] = [];
+  availableCountries: string[] = [];
+  isDadosGeraisExpanded = true;
+  nomeValue = '';
+  assuntoValue = '';
+  paisSelecionado = '';
 
-  constructor() {}
+  constructor(private countriesService: CountriesService) {
+    this.availableYears = [];
+    for (let year = this.currentYear; year >= 1943; year--) {
+      this.availableYears.push(year);
+    }
+    this.availableCountries = this.countriesService.getCountryNames();
+    this.filtros.ehBrasileiro = true;
+    this.filtros.anoAPartirDe = '' as any;
+  }
 
   toggleFilters(): void {
     this.isExpanded = !this.isExpanded;
+  }
+
+  toggleDadosGerais(): void {
+    this.isDadosGeraisExpanded = !this.isDadosGeraisExpanded;
+  }
+
+  onCountryChange(): void {
+    if (this.paisSelecionado) {
+      this.filtros.ehBrasileiro = false;
+    }
+  }
+
+  onBrasileiroChange(): void {
+    if (this.filtros.ehBrasileiro) {
+      this.paisSelecionado = '';
+    }
   }
 
   updatePalavrasChave(): void {
@@ -42,14 +74,21 @@ export class FiltrosBuscaComponent {
 
   onApplyFilters(): void {
     this.updatePalavrasChave();
-    
-    // Filtrar apenas campos com valores válidos
     const filtrosLimpos: FiltrosBusca = {};
-
-    if (this.filtros.nome?.trim()) {
-      filtrosLimpos.nome = this.filtros.nome.trim();
+    if (this.nomeValue?.trim()) {
+      filtrosLimpos.nome = this.nomeValue.trim();
     }
     
+    if (this.assuntoValue?.trim()) {
+      const assuntos = this.assuntoValue
+        .split(',')
+        .map((item: string) => item.trim())
+        .filter((item: string) => item.length > 0);
+      if (assuntos.length > 0) {
+        filtrosLimpos.assuntos = assuntos;
+      }
+    }
+
     if (this.filtros.instituicao?.trim()) {
       filtrosLimpos.instituicao = this.filtros.instituicao.trim();
     }
@@ -57,9 +96,9 @@ export class FiltrosBuscaComponent {
     if (this.filtros.temDoutorado !== undefined) {
       filtrosLimpos.temDoutorado = this.filtros.temDoutorado;
     }
-    
-    if (this.filtros.anoAPartirDe && this.filtros.anoAPartirDe > 0) {
-      filtrosLimpos.anoAPartirDe = this.filtros.anoAPartirDe;
+
+    if (this.filtros.anoAPartirDe && this.filtros.anoAPartirDe !== '' && Number(this.filtros.anoAPartirDe) > 0) {
+      filtrosLimpos.anoAPartirDe = String(this.filtros.anoAPartirDe);
     }
     
     if (this.filtros.linhaDePesquisa?.trim()) {
@@ -70,12 +109,13 @@ export class FiltrosBuscaComponent {
       filtrosLimpos.areaDePesquisa = this.filtros.areaDePesquisa.trim();
     }
     
-    if (this.filtros.paisDeNacionalidade?.trim()) {
-      filtrosLimpos.paisDeNacionalidade = this.filtros.paisDeNacionalidade.trim();
-    }
-    
-    if (this.filtros.ehBrasileiro !== undefined) {
-      filtrosLimpos.ehBrasileiro = this.filtros.ehBrasileiro;
+    if (this.paisSelecionado?.trim()) {
+      filtrosLimpos.paisDeNacionalidade = this.paisSelecionado;
+      filtrosLimpos.ehBrasileiro = null;
+    } else {
+      if (this.filtros.ehBrasileiro !== undefined) {
+        filtrosLimpos.ehBrasileiro = null;
+      }
     }
     
     if (this.filtros.palavrasChave && this.filtros.palavrasChave.length > 0) {
@@ -88,10 +128,14 @@ export class FiltrosBuscaComponent {
   onClearFilters(): void {
     this.filtros = {};
     this.palavrasChaveText = '';
+    this.nomeValue = ''; 
+    this.assuntoValue = '';  
+    this.filtros.ehBrasileiro = true;  
+    this.filtros.anoAPartirDe = '' as any;  
+    this.paisSelecionado = '';  
     this.filtrosCleared.emit();
   }
 
-  // Método para definir filtros externamente (ex: quando vem da URL)
   setFiltros(filtros: FiltrosBusca): void {
     this.filtros = { ...filtros };
     if (filtros.palavrasChave && filtros.palavrasChave.length > 0) {
@@ -99,17 +143,17 @@ export class FiltrosBuscaComponent {
     }
   }
 
-  // Método para verificar se há filtros ativos
   hasActiveFilters(): boolean {
     return !!(
-      this.filtros.nome?.trim() ||
+      this.nomeValue?.trim() || 
+      this.assuntoValue?.trim() || 
       this.filtros.instituicao?.trim() ||
       this.filtros.temDoutorado !== undefined ||
-      this.filtros.anoAPartirDe ||
+      (this.filtros.anoAPartirDe && String(this.filtros.anoAPartirDe) !== '') ||
       this.filtros.linhaDePesquisa?.trim() ||
       this.filtros.areaDePesquisa?.trim() ||
-      this.filtros.paisDeNacionalidade?.trim() ||
-      this.filtros.ehBrasileiro !== undefined ||
+      this.filtros.ehBrasileiro === false ||
+      this.paisSelecionado?.trim() ||
       (this.filtros.palavrasChave && this.filtros.palavrasChave.length > 0)
     );
   }

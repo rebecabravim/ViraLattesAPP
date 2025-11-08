@@ -11,6 +11,14 @@ body {
   background-color: var(--primary-color);
   color: var(--text-color);
   overflow-x: hidden;
+  margin: 0 !important; 
+}
+
+main, .main-content, app-root {
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+  position: relative;
+  z-index: 1;
 }
 
 :root {
