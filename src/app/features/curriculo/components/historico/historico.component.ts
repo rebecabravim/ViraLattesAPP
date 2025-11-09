@@ -89,8 +89,7 @@ export class HistoricoComponent implements OnInit {
           console.error('Erro ao adicionar ao histórico:', error);
         }
       });
-    } catch (error) {
-      console.error('Erro de validação ao adicionar ao histórico:', error);
+    } catch (error: any) {
     }
   }
 

@@ -49,7 +49,9 @@ export class ViewCurriculoComponent implements OnInit {
       next: (response) => {
         if (response.success) {
           this.curriculo = response.data;
-          this.addToHistorico(); 
+          if (!this.isMeuCurriculo) {
+            this.addToHistorico(); 
+          }
         } else {
           console.error('Erro na resposta:', response.message);
           this.router.navigate(['/curriculo']);

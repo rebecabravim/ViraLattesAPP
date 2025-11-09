@@ -63,6 +63,7 @@ export class AuthService {
     localStorage.removeItem('userName');
     localStorage.removeItem('userId');
     localStorage.removeItem('idMeuCurriculo');
+    localStorage.removeItem('curriculo-historico');
   }
 
   public logout(): void {

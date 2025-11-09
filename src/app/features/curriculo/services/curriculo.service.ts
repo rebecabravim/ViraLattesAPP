@@ -190,7 +190,7 @@ export class CurriculoService {
       throw new Error('ID do usuário e ID do currículo são obrigatórios');
     }
 
-    return this.http.put<ApiResponse<any>>(`${this.userApiUrl}/${userId}/meu-curriculo`, { curriculoId }, this.getHttpOptions());
+    return this.http.post<ApiResponse<any>>(`${this.userApiUrl}/${userId}/meuCurriculo`, { curriculoId }, this.getHttpOptions());
   }
 
   desvincularMeuCurriculo(userId: string): Observable<ApiResponse<any>> {
@@ -202,7 +202,7 @@ export class CurriculoService {
       throw new Error('ID do usuário é obrigatório');
     }
 
-    return this.http.delete<ApiResponse<any>>(`${this.userApiUrl}/${userId}/meu-curriculo`, this.getHttpOptions());
+    return this.http.delete<ApiResponse<any>>(`${this.userApiUrl}/${userId}/meuCurriculo`, this.getHttpOptions());
   }
 
   // Métodos para Histórico
@@ -213,6 +213,12 @@ export class CurriculoService {
     
     if (!userId || !curriculoId) {
       throw new Error('ID do usuário e ID do currículo são obrigatórios');
+    }
+
+    // Verificar se não é o próprio currículo do usuário
+    const meuCurriculoId = localStorage.getItem('idMeuCurriculo');
+    if (meuCurriculoId && meuCurriculoId === curriculoId) {
+      throw new Error('Você não pode adicionar seu próprio currículo ao histórico');
     }
 
     return this.http.post<ApiResponse<any>>(`${this.userApiUrl}/${userId}/historico`, { curriculoId }, this.getHttpOptions());
