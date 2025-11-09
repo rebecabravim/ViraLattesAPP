@@ -8,25 +8,22 @@
 body {
   height: 100vh;
   width: 100vw;
-  background-color: var(--primary-color);
-  color: var(--text-color);
+  background-color: var(--background);
+  color: #333;
   overflow-x: hidden;
   margin: 0 !important; 
 }
 
 main, .main-content, app-root {
   margin-left: 0 !important;
-  padding-left: 0 !important;
   position: relative;
   z-index: 1;
 }
 
 :root {
-  --primary-color: #1976d2;
-  --primary-color-light: #42a5f5;
-  --secondary-color: #9c27b0;
-  --secondary-color-light: #ba68c8;
-  --text-color: #333;
-  --border-radius: 10px;
-  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  /* Cores do aplicativo */
+  --principal: #003366;
+  --secundaria: #4A90E2;
+  --destaque: #D2691E;
+  --background: #F8F9FA;
 }

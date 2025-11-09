@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CurriculoService, Curriculo, CurriculoResumo, FiltrosBusca } from '../../services/curriculo.service';
-import { CommonModule, SlicePipe } from '@angular/common';
+import { LoaderService } from '../../../shared/services/loader.service';
 
 @Component({
   selector: 'app-list-curriculo',
@@ -11,7 +11,6 @@ import { CommonModule, SlicePipe } from '@angular/common';
 })
 export class ListCurriculoComponent implements OnInit {
   curriculos: CurriculoResumo[] = [];
-  isLoading = false;
   searchTerm = '';
   filteredCurriculos: CurriculoResumo[] = [];
   totalCount = 0;
@@ -21,7 +20,8 @@ export class ListCurriculoComponent implements OnInit {
   constructor(
     private curriculoService: CurriculoService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private loaderService: LoaderService
   ) {}
 
   ngOnInit(): void {
@@ -38,15 +38,13 @@ export class ListCurriculoComponent implements OnInit {
    
 
   onSearch(): void {
-    
-    this.isLoading = true;
     const filtros: FiltrosBusca = { nome: this.searchTerm.trim() };
     this.onSearchWithFilters(filtros);
   }
  
   onSearchWithFilters(filtros: FiltrosBusca): void {
     this.filtrosAtivos = filtros;
-    this.isLoading = true;
+    this.loaderService.show();
     
     console.log('Filtros avançados recebidos:', filtros);
     
@@ -60,13 +58,13 @@ export class ListCurriculoComponent implements OnInit {
           this.filteredCurriculos = [];
           this.totalCount = 0;
         }
-        this.isLoading = false;
+        this.loaderService.hide();
       },
       error: (error: any) => {
         console.error('Erro ao buscar currículos com filtros:', error);
         this.filteredCurriculos = [];
         this.totalCount = 0;
-        this.isLoading = false;
+        this.loaderService.hide();
       }
     });
   }
@@ -76,7 +74,6 @@ export class ListCurriculoComponent implements OnInit {
     this.searchTerm = '';
     this.filteredCurriculos = [];
     this.totalCount = 0;
-    this.isLoading = false;
   }
 
   hasActiveFilters(): boolean {
