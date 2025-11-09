@@ -20,6 +20,10 @@ export class ViewCurriculoComponent implements OnInit {
   // Favoritos
   isFavorited = false;
   isTogglingFavorite = false;
+  
+  // Meu Currículo
+  isMeuCurriculo = false;
+  isDesvinculando = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -30,7 +34,13 @@ export class ViewCurriculoComponent implements OnInit {
 
   ngOnInit(): void {
     this.curriculoId = this.route.snapshot.params['id'];
+    this.checkIfMeuCurriculo();
     this.loadCurriculo();
+  }
+
+  private checkIfMeuCurriculo(): void {
+    const idMeuCurriculo = localStorage.getItem('idMeuCurriculo');
+    this.isMeuCurriculo = idMeuCurriculo === this.curriculoId;
   }
 
   private loadCurriculo(): void {
@@ -39,7 +49,7 @@ export class ViewCurriculoComponent implements OnInit {
       next: (response) => {
         if (response.success) {
           this.curriculo = response.data;
-          this.addToHistorico(); // Adiciona ao histórico quando carregado com sucesso
+          this.addToHistorico(); 
         } else {
           console.error('Erro na resposta:', response.message);
           this.router.navigate(['/curriculo']);
@@ -146,11 +156,47 @@ export class ViewCurriculoComponent implements OnInit {
         resumoBreve: this.curriculo.dadosGerais?.textoResumoCvRh || ''
       };
       
-      HistoricoComponent.addToHistorico(curriculoResumo);
+      HistoricoComponent.addToHistorico(curriculoResumo, this.curriculoService, this.authService);
     }
   }
 
- 
+  onDesvincularMeuCurriculo(): void {
+    if (!confirm('Tem certeza que deseja desvincular este currículo? Você poderá vincular outro currículo depois.')) {
+      return;
+    }
+
+    const userId = this.authService.getUserId();
+    if (!userId) {
+      alert('Usuário não autenticado');
+      return;
+    }
+
+    this.isDesvinculando = true;
+
+    try {
+      this.curriculoService.desvincularMeuCurriculo(userId).subscribe({
+        next: (response) => {
+          if (response && response.success) {
+            localStorage.removeItem('idMeuCurriculo');
+            alert('Currículo desvinculado com sucesso!');
+            this.router.navigate(['/curriculo/meu-curriculo']);
+          } else {
+            alert('Erro ao desvincular currículo');
+          }
+          this.isDesvinculando = false;
+        },
+        error: (error) => {
+          console.error('Erro ao desvincular currículo:', error);
+          alert('Erro ao desvincular currículo. Tente novamente.');
+          this.isDesvinculando = false;
+        }
+      });
+    } catch (error) {
+      console.error('Erro de validação:', error);
+      alert('Erro de validação. Tente novamente.');
+      this.isDesvinculando = false;
+    }
+  }
 
   // getFormattedDate(date: string): string {
   //   if (!date) return 'N/A';

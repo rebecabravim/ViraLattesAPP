@@ -38,6 +38,18 @@
                   title="{{ isFavorited ? 'Remover dos favoritos' : 'Adicionar aos favoritos' }}">
                   <span class="star-icon">{{ isFavorited ? '★' : '☆' }}</span>
                 </button>
+                
+                <!-- Botão de Desvincular para Meu Currículo -->
+                <button 
+                  *ngIf="isMeuCurriculo"
+                  class="unlink-btn" 
+                  (click)="onDesvincularMeuCurriculo()"
+                  [disabled]="isDesvinculando"
+                  title="Desvincular este currículo da minha conta">
+                  <span *ngIf="!isDesvinculando" class="unlink-icon">🔗</span>
+                  <span *ngIf="isDesvinculando" class="spinner-small"></span>
+                  <span class="btn-text">{{ isDesvinculando ? 'Desvinculando...' : 'Desvincular' }}</span>
+                </button>
               </div>
               <p class="profile-citation">{{ curriculo.identificacao.nomeEmCitacoesBibliograficas }}</p>
             </div>

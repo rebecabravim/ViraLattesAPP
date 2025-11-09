@@ -68,9 +68,8 @@ export class MeuCurriculoComponent implements OnInit {
         this.curriculoService.getCurriculoById(idMeuCurriculo).subscribe({
           next: (response) => {
             if (response && response.success && response.data) {
-              // Usuário já tem um currículo vinculado
-              this.state.hasVinculo = true;
-              this.state.curriculo = response.data;
+              // Usuário já tem um currículo vinculado - redireciona para visualização completa
+              this.router.navigate(['/curriculo/view', idMeuCurriculo]);
             } else {
               // Currículo não encontrado, resetar vínculo
               this.state.hasVinculo = false;
@@ -156,10 +155,10 @@ export class MeuCurriculoComponent implements OnInit {
             // Salva o ID do currículo vinculado no localStorage
             localStorage.setItem('idMeuCurriculo', curriculoId);
             
-            // Recarrega o currículo vinculado
+            // Redireciona para a visualização completa do currículo
             setTimeout(() => {
-              this.checkMeuCurriculo();
-            }, 1000);
+              this.router.navigate(['/curriculo/view', curriculoId]);
+            }, 1500);
           } else {
             this.state.errorMessage = response?.message || 'Erro ao vincular currículo';
           }

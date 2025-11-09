@@ -154,7 +154,7 @@ export class CurriculoService {
 
     
 
-    return this.http.get<ApiResponse<CurriculoResumo[]>>(`${this.apiUrl}/favoritos/${userId}`, this.getHttpOptions());
+    return this.http.get<ApiResponse<CurriculoResumo[]>>(`${this.userApiUrl}/${userId}/favoritos`, this.getHttpOptions());
   }
 
   removeFavorito(userId: string, curriculoId: string): Observable<ApiResponse<any>> {
@@ -166,7 +166,7 @@ export class CurriculoService {
       throw new Error('ID do usuário e ID do currículo são obrigatórios');
     }
 
-    return this.http.delete<ApiResponse<any>>(`${this.apiUrl}/favoritos/${userId}/${curriculoId}`, this.getHttpOptions());
+    return this.http.delete<ApiResponse<any>>(`${this.userApiUrl}/${userId}/favoritos/${curriculoId}`, this.getHttpOptions());
   }
 
   addFavorito(userId: string, curriculoId: string): Observable<ApiResponse<any>> {
@@ -178,7 +178,7 @@ export class CurriculoService {
       throw new Error('ID do usuário e ID do currículo são obrigatórios');
     }
 
-    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/favoritos/${userId}`, {curriculoId}, this.getHttpOptions());
+    return this.http.post<ApiResponse<any>>(`${this.userApiUrl}/${userId}/favoritos`, { curriculoId }, this.getHttpOptions());
   }
 
   vincularMeuCurriculo(userId: string, curriculoId: string): Observable<ApiResponse<any>> {
@@ -190,8 +190,7 @@ export class CurriculoService {
       throw new Error('ID do usuário e ID do currículo são obrigatórios');
     }
 
-    const userApiUrl = `${environment.apiUrl}/User`;
-    return this.http.put<ApiResponse<any>>(`${userApiUrl}/${userId}/meu-curriculo`, { curriculoId }, this.getHttpOptions());
+    return this.http.put<ApiResponse<any>>(`${this.userApiUrl}/${userId}/meu-curriculo`, { curriculoId }, this.getHttpOptions());
   }
 
   desvincularMeuCurriculo(userId: string): Observable<ApiResponse<any>> {
@@ -203,8 +202,56 @@ export class CurriculoService {
       throw new Error('ID do usuário é obrigatório');
     }
 
-    const userApiUrl = `${environment.apiUrl}/User`;
-    return this.http.delete<ApiResponse<any>>(`${userApiUrl}/${userId}/meu-curriculo`, this.getHttpOptions());
+    return this.http.delete<ApiResponse<any>>(`${this.userApiUrl}/${userId}/meu-curriculo`, this.getHttpOptions());
+  }
+
+  // Métodos para Histórico
+  addToHistorico(userId: string, curriculoId: string): Observable<ApiResponse<any>> {
+    if (!this.isAuthenticated()) {
+      throw new Error('Usuário não autenticado para adicionar ao histórico');
+    }
+    
+    if (!userId || !curriculoId) {
+      throw new Error('ID do usuário e ID do currículo são obrigatórios');
+    }
+
+    return this.http.post<ApiResponse<any>>(`${this.userApiUrl}/${userId}/historico`, { curriculoId }, this.getHttpOptions());
+  }
+
+  getHistorico(userId: string): Observable<ApiResponse<CurriculoResumo[]>> {
+    if (!this.isAuthenticated()) {
+      throw new Error('Usuário não autenticado para acessar histórico');
+    }
+    
+    if (!userId) {
+      throw new Error('ID do usuário é obrigatório');
+    }
+
+    return this.http.get<ApiResponse<CurriculoResumo[]>>(`${this.userApiUrl}/${userId}/historico`, this.getHttpOptions());
+  }
+
+  removeFromHistorico(userId: string, curriculoId: string): Observable<ApiResponse<any>> {
+    if (!this.isAuthenticated()) {
+      throw new Error('Usuário não autenticado para remover do histórico');
+    }
+    
+    if (!userId || !curriculoId) {
+      throw new Error('ID do usuário e ID do currículo são obrigatórios');
+    }
+
+    return this.http.delete<ApiResponse<any>>(`${this.userApiUrl}/${userId}/historico/${curriculoId}`, this.getHttpOptions());
+  }
+
+  clearHistorico(userId: string): Observable<ApiResponse<any>> {
+    if (!this.isAuthenticated()) {
+      throw new Error('Usuário não autenticado para limpar histórico');
+    }
+    
+    if (!userId) {
+      throw new Error('ID do usuário é obrigatório');
+    }
+
+    return this.http.delete<ApiResponse<any>>(`${this.userApiUrl}/${userId}/historico`, this.getHttpOptions());
   }
 
   buscarCurriculoPorNome(nome: string): Observable<ApiResponseBusca> {

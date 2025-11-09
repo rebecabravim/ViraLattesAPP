@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { CurriculoResumo } from '../../services/curriculo.service';
+import { CurriculoResumo, CurriculoService } from '../../services/curriculo.service';
+import { AuthService } from '../../../authentication/services/auth.service';
 import { CurriculoListConfig } from '../curriculo-list-simple/curriculo-list-simple.component';
 
 @Component({
@@ -21,58 +22,75 @@ export class HistoricoComponent implements OnInit {
     loadingMessage: 'Carregando histórico...'
   };
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private curriculoService: CurriculoService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.loadHistorico();
   }
 
   loadHistorico(): void {
+    const userId = this.authService.getUserId();
+    if (!userId) {
+      console.error('Usuário não autenticado');
+      this.isLoading = false;
+      return;
+    }
+
     this.isLoading = true;
-    
-    const historicoData = this.getHistoricoFromStorage();
-    this.historico = historicoData;
-    this.isLoading = false;
-  }
 
-  private getHistoricoFromStorage(): CurriculoResumo[] {
     try {
-      const stored = localStorage.getItem('curriculo-historico');
-      return stored ? JSON.parse(stored) : [];
+      this.curriculoService.getHistorico(userId).subscribe({
+        next: (response) => {
+          if (response && response.success && response.data) {
+            this.historico = response.data;
+          } else {
+            console.error('Erro na resposta do histórico:', response?.message);
+            this.historico = [];
+          }
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Erro ao carregar histórico:', error);
+          this.historico = [];
+          this.isLoading = false;
+        }
+      });
     } catch (error) {
-      console.error('Erro ao carregar histórico do localStorage:', error);
-      return [];
+      console.error('Erro de validação ao carregar histórico:', error);
+      this.historico = [];
+      this.isLoading = false;
     }
   }
 
-  private saveHistoricoToStorage(historico: CurriculoResumo[]): void {
-    try {
-      localStorage.setItem('curriculo-historico', JSON.stringify(historico));
-    } catch (error) {
-      console.error('Erro ao salvar histórico no localStorage:', error);
-    }
-  }
+
 
   // Método público para adicionar um currículo ao histórico (será chamado de outros componentes)
-  static addToHistorico(curriculo: CurriculoResumo): void {
+  static addToHistorico(curriculo: CurriculoResumo, curriculoService: CurriculoService, authService: AuthService): void {
+    const userId = authService.getUserId();
+    if (!userId) {
+      console.error('Usuário não autenticado para adicionar ao histórico');
+      return;
+    }
+
     try {
-      const stored = localStorage.getItem('curriculo-historico');
-      let historico: CurriculoResumo[] = stored ? JSON.parse(stored) : [];
-      
-      // Remove duplicatas (se já existe)
-      historico = historico.filter(h => h.id !== curriculo.id);
-      
-      // Adiciona no início
-      historico.unshift(curriculo);
-      
-      // Limita a 20 itens
-      if (historico.length > 20) {
-        historico = historico.slice(0, 20);
-      }
-      
-      localStorage.setItem('curriculo-historico', JSON.stringify(historico));
+      curriculoService.addToHistorico(userId, curriculo.id).subscribe({
+        next: (response) => {
+          if (response && response.success) {
+            console.log('Currículo adicionado ao histórico com sucesso');
+          } else {
+            console.error('Erro ao adicionar ao histórico:', response?.message);
+          }
+        },
+        error: (error) => {
+          console.error('Erro ao adicionar ao histórico:', error);
+        }
+      });
     } catch (error) {
-      console.error('Erro ao adicionar ao histórico:', error);
+      console.error('Erro de validação ao adicionar ao histórico:', error);
     }
   }
 
@@ -81,12 +99,60 @@ export class HistoricoComponent implements OnInit {
   }
 
   onRemoveFromHistorico(curriculoId: string): void {
-    this.historico = this.historico.filter(h => h.id !== curriculoId);
-    this.saveHistoricoToStorage(this.historico);
+    const userId = this.authService.getUserId();
+    if (!userId) {
+      console.error('Usuário não autenticado');
+      return;
+    }
+
+    try {
+      this.curriculoService.removeFromHistorico(userId, curriculoId).subscribe({
+        next: (response) => {
+          if (response && response.success) {
+            // Remove da lista local após sucesso no backend
+            this.historico = this.historico.filter(h => h.id !== curriculoId);
+            console.log('Currículo removido do histórico com sucesso');
+          } else {
+            console.error('Erro ao remover do histórico:', response?.message);
+          }
+        },
+        error: (error) => {
+          console.error('Erro ao remover do histórico:', error);
+        }
+      });
+    } catch (error) {
+      console.error('Erro de validação ao remover do histórico:', error);
+    }
   }
 
   clearHistorico(): void {
-    this.historico = [];
-    this.saveHistoricoToStorage([]);
+    if (!confirm('Tem certeza que deseja limpar todo o histórico? Esta ação não pode ser desfeita.')) {
+      return;
+    }
+
+    const userId = this.authService.getUserId();
+    if (!userId) {
+      console.error('Usuário não autenticado');
+      return;
+    }
+
+    try {
+      this.curriculoService.clearHistorico(userId).subscribe({
+        next: (response) => {
+          if (response && response.success) {
+            // Limpa a lista local após sucesso no backend
+            this.historico = [];
+            console.log('Histórico limpo com sucesso');
+          } else {
+            console.error('Erro ao limpar histórico:', response?.message);
+          }
+        },
+        error: (error) => {
+          console.error('Erro ao limpar histórico:', error);
+        }
+      });
+    } catch (error) {
+      console.error('Erro de validação ao limpar histórico:', error);
+    }
   }
 }

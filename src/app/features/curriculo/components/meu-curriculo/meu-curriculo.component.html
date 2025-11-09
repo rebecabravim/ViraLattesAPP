@@ -10,57 +10,8 @@
     <p>Verificando seu currículo...</p>
   </div>
 
-  <!-- Currículo Já Vinculado -->
-  <div *ngIf="!state.isLoading && state.hasVinculo && state.curriculo" class="curriculo-vinculado">
-    <div class="success-banner">
-      <span class="success-icon">✅</span>
-      <div>
-        <h3>Seu currículo está vinculado!</h3>
-        <p>Você pode visualizar ou desvincular seu currículo abaixo.</p>
-      </div>
-    </div>
-
-    <div class="curriculo-card">
-      <div class="curriculo-info">
-        <div class="curriculo-avatar">
-          <span class="avatar-icon">👤</span>
-        </div>
-        <div class="curriculo-details">
-          <h3 class="curriculo-name">{{ state.curriculo.identificacao.nomeCompleto || 'Nome não disponível' }}</h3>
-          <p class="curriculo-id">ID: {{ state.curriculo.numeroIdentificador }}</p>
-          <p class="curriculo-institution" *ngIf="state.curriculo.dadosGerais.endereco.nomeInstituicaoEmpresa">
-            {{ state.curriculo.dadosGerais.endereco.nomeInstituicaoEmpresa }}
-          </p>
-          <p class="curriculo-resume" *ngIf="state.curriculo.dadosGerais.textoResumoCvRh">
-            {{ state.curriculo.dadosGerais.textoResumoCvRh | slice:0:150 }}{{ state.curriculo.dadosGerais.textoResumoCvRh.length > 150 ? '...' : '' }}
-          </p>
-        </div>
-      </div>
-
-      <div class="curriculo-actions">
-        <button 
-          class="btn btn-primary" 
-          (click)="onViewCurriculo(state.curriculo.id!)"
-          title="Visualizar currículo completo">
-          <span class="btn-icon">👁️</span>
-          Ver Detalhes
-        </button>
-        
-        <button 
-          class="btn btn-danger" 
-          (click)="onDesvincularCurriculo()"
-          [disabled]="state.isDesvinculando"
-          title="Desvincular este currículo">
-          <span *ngIf="!state.isDesvinculando" class="btn-icon">🗑️</span>
-          <span *ngIf="state.isDesvinculando" class="spinner-small"></span>
-          {{ state.isDesvinculando ? 'Desvinculando...' : 'Desvincular' }}
-        </button>
-      </div>
-    </div>
-  </div>
-
   <!-- Sem Currículo Vinculado -->
-  <div *ngIf="!state.isLoading && !state.hasVinculo" class="sem-curriculo">
+  <div *ngIf="!state.isLoading" class="sem-curriculo">
     <div class="search-section">
       <div class="search-header">
         <h3>Buscar Meu Currículo</h3>
