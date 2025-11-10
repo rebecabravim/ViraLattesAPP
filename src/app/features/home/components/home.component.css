@@ -6,7 +6,6 @@
 
 .main-content {
   flex: 1;
-  margin-left: 250px; /* Largura da sidebar */
   padding: 2rem;
   background-color: var(--background);
   min-height: 100vh;
@@ -24,10 +23,9 @@
   width: 100%;
 }
 
-/* Responsividade para sidebar */
+/* Responsividade mobile */
 @media (max-width: 768px) {
   .main-content {
-    margin-left: 0;
     padding: 1rem;
   }
 }
@@ -73,14 +71,14 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1rem;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto 1rem;
 }
 
 .search-input {
-  flex: 1;
-  max-width: 400px;
+  width: 100%;
+  max-width: 800px;
   padding: 0.75rem 1rem;
   border: 2px solid #e1e8ed;
   border-radius: 25px;
@@ -218,6 +216,58 @@
   
   .footer-logo {
     height: 220px;
+  }
+}
+
+/* Desktop - elementos maiores */
+@media (min-width: 769px) {
+  .header h1 {
+    font-size: 3.5rem;
+  }
+
+  .subtitle-bar {
+    height: 4px;
+  }
+
+  .search-container {
+    max-width: 600px;
+  }
+
+  .search-input {
+    max-width: 100%;
+    padding: 1rem 1.5rem;
+    font-size: 1.125rem;
+    border-radius: 30px;
+  }
+
+  .search-btn {
+    padding: 0.875rem 1.5rem;
+    font-size: 1.05rem;
+    height: 56px;
+    border-radius: 10px;
+  }
+
+  .search-btn svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .filter-btn {
+    width: 56px;
+    height: 56px;
+  }
+
+  .filter-btn svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .buttons-container {
+    gap: 1.25rem;
+  }
+
+  .footer-logo {
+    height: 320px;
   }
 }
 

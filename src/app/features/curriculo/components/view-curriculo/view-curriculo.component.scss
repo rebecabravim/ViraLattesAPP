@@ -42,7 +42,6 @@
 .main-content {
   flex: 1;
   max-width: 1200px;
-  margin: 0 auto;
   padding: 2rem 1.5rem;
   width: 100%;
 }
@@ -742,6 +741,109 @@
 
   .accordion-title .material-symbols-outlined {
     font-size: 20px;
+  }
+}
+
+/* Desktop - Centralizar conteúdo */
+@media (min-width: 769px) {
+  .curriculo-layout {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    width: 100%;
+  }
+
+  .main-content {
+    max-width: 900px;
+    width: 100%;
+  }
+
+  .profile-card {
+    padding: 2.5rem;
+  }
+
+  .profile-header {
+    margin-bottom: 2rem;
+  }
+
+  .profile-name {
+    font-size: 2.5rem;
+  }
+
+  .favorite-btn {
+    width: 52px;
+    height: 52px;
+
+    .material-symbols-outlined {
+      font-size: 32px;
+    }
+  }
+
+  .profile-title {
+    font-size: 1.35rem;
+  }
+
+  .contact-info-item {
+    font-size: 1.05rem;
+
+    .material-symbols-outlined {
+      font-size: 24px;
+    }
+  }
+
+  .section-card {
+    padding: 2rem;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.75rem;
+
+    .material-symbols-outlined {
+      font-size: 32px;
+    }
+  }
+
+  .accordion-header {
+    padding: 1.25rem;
+  }
+
+  .accordion-title {
+    font-size: 1.15rem;
+
+    .material-symbols-outlined {
+      font-size: 26px;
+    }
+  }
+
+  .accordion-text {
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+
+  .info-item-label {
+    font-size: 1rem;
+  }
+
+  .info-item-value {
+    font-size: 1.05rem;
+  }
+
+  .pesquisa-badge {
+    padding: 1rem 1.25rem;
+    font-size: 1.05rem;
+  }
+
+  .btn-back-float {
+    width: 56px;
+    height: 56px;
+    top: 2rem;
+    right: 2rem;
+
+    .material-symbols-outlined {
+      font-size: 32px;
+    }
   }
 }
 

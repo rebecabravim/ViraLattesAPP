@@ -118,9 +118,9 @@
 
     .greeting {
       font-weight: 600;
-      font-size: 1.8rem;
+      font-size: 1.5rem;
       margin-bottom: 2rem;
-      color: #f0f0f0;
+      color: #F0F0F0F0;
     }
 
     .action-buttons {
@@ -224,7 +224,68 @@
     }
   }
 
+  // Desktop - tamanhos maiores
+  @media (min-width: 769px) {
+    .sidebar-toggle {
+      width: 64px;
+      height: 64px;
+      right: 12px;
 
+      .paw-icon {
+        font-size: 36px;
+      }
+    }
+
+    .user-info {
+      padding: 1.5rem 1.5rem;
+
+      .greeting {
+        font-size: 1.25rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+      }
+
+      .action-buttons {
+        gap: 1rem;
+
+        .menu-button {
+          padding: 1.25rem 1.5rem;
+          font-size: 1.05rem;
+          border-radius: 12px;
+          gap: 1rem;
+
+          .material-symbols-outlined {
+            font-size: 26px;
+          }
+
+          .menu-text {
+            font-size: 1.05rem;
+          }
+        }
+      }
+
+      .sidebar-logo {
+        width: 140px;
+      }
+
+      .logout-section {
+        padding-top: 1.5rem;
+
+        .logout-button {
+          padding: 1rem 1.25rem;
+          font-size: 1rem;
+          border-radius: 12px;
+          gap: 0.75rem;
+
+          .material-symbols-outlined {
+            font-size: 22px;
+          }
+        }
+      }
+    }
+  }
 
   // Mobile responsive
   @media (max-width: 768px) {
