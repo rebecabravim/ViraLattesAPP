@@ -90,8 +90,12 @@ export class CurriculoService {
     return this.http.get<ApiResponseBusca>(`${this.apiUrl}`, this.getHttpOptions());
   }
 
-  searchWithFilters(filtros: FiltrosBusca): Observable<ApiResponseBusca> {
+  searchWithFilters(filtros: FiltrosBusca, pageNumber: number = 1, pageSize: number = 10): Observable<ApiResponseBusca> {
     const filtrosLimpos: any = {};
+    
+    // Adicionar paginação
+    filtrosLimpos.pageNumber = pageNumber;
+    filtrosLimpos.pageSize = pageSize;
     
     if (filtros.nome?.trim()) {
       filtrosLimpos.nome = filtros.nome.trim();

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { CurriculoService, Curriculo, CurriculoResumo, FiltrosBusca } from '../../services/curriculo.service';
+import { CurriculoService, Curriculo, CurriculoResumo, FiltrosBusca, Pagination } from '../../services/curriculo.service';
 import { LoaderService } from '../../../shared/services/loader.service';
 
 @Component({
@@ -16,6 +16,18 @@ export class ListCurriculoComponent implements OnInit {
   totalCount = 0;
   filtrosAtivos: FiltrosBusca = {};
   showFilters = false;
+  
+  // Paginação
+  pagination: Pagination = {
+    totalRecords: 0,
+    pageNumber: 1,
+    pageSize: 10,
+    totalPages: 0,
+    hasPreviousPage: false,
+    hasNextPage: false
+  };
+  currentPage = 1;
+  pageSize = 10;
 
   constructor(
     private curriculoService: CurriculoService,
@@ -44,14 +56,20 @@ export class ListCurriculoComponent implements OnInit {
  
   onSearchWithFilters(filtros: FiltrosBusca): void {
     this.filtrosAtivos = filtros;
+    this.currentPage = 1; // Reset para primeira página
+    this.loadCurriculosWithPagination();
+  }
+
+  loadCurriculosWithPagination(): void {
     this.loaderService.show();
     
-    console.log('Filtros avançados recebidos:', filtros);
+    console.log('Filtros avançados recebidos:', this.filtrosAtivos);
     
-    this.curriculoService.searchWithFilters(filtros).subscribe({
+    this.curriculoService.searchWithFilters(this.filtrosAtivos, this.currentPage, this.pageSize).subscribe({
       next: (response) => {
         if (response.success) {
           this.filteredCurriculos = response.data;
+          this.pagination = response.pagination;
           this.totalCount = response.pagination.totalRecords;
         } else {
           console.error('Erro na busca com filtros:', response.message);
@@ -67,6 +85,38 @@ export class ListCurriculoComponent implements OnInit {
         this.loaderService.hide();
       }
     });
+  }
+
+  onPageChange(page: number): void {
+    if (page >= 1 && page <= this.pagination.totalPages) {
+      this.currentPage = page;
+      this.loadCurriculosWithPagination();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  getPageNumbers(): number[] {
+    const pages: number[] = [];
+    const totalPages = this.pagination.totalPages;
+    const current = this.currentPage;
+    
+    // Mostrar no máximo 5 páginas
+    let startPage = Math.max(1, current - 2);
+    let endPage = Math.min(totalPages, current + 2);
+    
+    // Ajustar se estiver no início ou fim
+    if (current <= 3) {
+      endPage = Math.min(5, totalPages);
+    }
+    if (current >= totalPages - 2) {
+      startPage = Math.max(1, totalPages - 4);
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+    
+    return pages;
   }
 
   onClearFilters(): void {

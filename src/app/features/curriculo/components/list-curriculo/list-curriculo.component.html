@@ -54,7 +54,54 @@
 
     <div class="results-info">
       <span class="material-symbols-outlined">info</span>
-      <p>{{ filteredCurriculos.length }} de {{ totalCount }} currículos</p>
+      <p>Mostrando {{ filteredCurriculos.length }} de {{ totalCount }} currículos</p>
+    </div>
+
+    <!-- Paginação -->
+    <div class="pagination" *ngIf="pagination.totalPages > 1">
+      <button 
+        class="page-btn" 
+        (click)="onPageChange(1)" 
+        [disabled]="!pagination.hasPreviousPage"
+        title="Primeira página">
+        <span class="material-symbols-outlined">first_page</span>
+      </button>
+
+      <button 
+        class="page-btn" 
+        (click)="onPageChange(currentPage - 1)" 
+        [disabled]="!pagination.hasPreviousPage"
+        title="Página anterior">
+        <span class="material-symbols-outlined">chevron_left</span>
+      </button>
+
+      <button 
+        *ngFor="let page of getPageNumbers()" 
+        class="page-btn page-number"
+        [class.active]="page === currentPage"
+        (click)="onPageChange(page)">
+        {{ page }}
+      </button>
+
+      <button 
+        class="page-btn" 
+        (click)="onPageChange(currentPage + 1)" 
+        [disabled]="!pagination.hasNextPage"
+        title="Próxima página">
+        <span class="material-symbols-outlined">chevron_right</span>
+      </button>
+
+      <button 
+        class="page-btn" 
+        (click)="onPageChange(pagination.totalPages)" 
+        [disabled]="!pagination.hasNextPage"
+        title="Última página">
+        <span class="material-symbols-outlined">last_page</span>
+      </button>
+
+      <span class="pagination-info">
+        Página {{ currentPage }} de {{ pagination.totalPages }}
+      </span>
     </div>
   </div>
 </div>
