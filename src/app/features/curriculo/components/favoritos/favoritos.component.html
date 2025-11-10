@@ -1,4 +1,14 @@
 <div class="favoritos-container">
+  <div class="page-header">
+    <div class="header-content">
+      <span class="material-symbols-outlined header-icon">favorite</span>
+      <div class="header-text">
+        <h1>Meus Favoritos</h1>
+        <p>Currículos salvos para acesso rápido</p>
+      </div>
+    </div>
+  </div>
+
   <app-curriculo-list-simple
     [curriculos]="favoritos"
     [isLoading]="isLoading"

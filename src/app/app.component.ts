@@ -14,7 +14,7 @@ export class AppComponent implements OnDestroy {
   shouldShowSidebar = false;
   isSidebarOpen = true;
   currentRoute: string = '';
-  hiddenRoutes = [ROUTE_PATHS.login, ROUTE_PATHS.home];
+  hiddenRoutes = [ROUTE_PATHS.login, ROUTE_PATHS.register, ROUTE_PATHS.home];
 
   private routerSubscription: Subscription;
   private sidebarSubscription: Subscription;

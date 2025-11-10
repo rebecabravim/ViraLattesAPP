@@ -1,63 +1,119 @@
 .historico-container {
   min-height: 100vh;
-  background: #f8fafc;
-  padding: 20px 0;
+  background: var(--background);
+  padding: 2rem;
 }
 
-.historico-header {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 0 20px 20px;
+.page-header {
+  max-width: 900px;
+  margin: 0 auto 2rem;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 51, 102, 0.08);
+  border-left: 4px solid var(--destaque);
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.header-icon {
+  font-size: 48px;
+  color: var(--destaque);
+  flex-shrink: 0;
+}
+
+.header-text h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--principal);
+  margin: 0 0 0.25rem 0;
+}
+
+.header-text p {
+  font-size: 0.95rem;
+  color: #64748b;
+  margin: 0;
 }
 
 .btn-clear-all {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-  background: #ef4444;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  background: #dc2626;
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.2s ease;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.btn-clear-all .material-symbols-outlined {
+  font-size: 16px;
 }
 
 .btn-clear-all:hover {
-  background: #dc2626;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  background: #b91c1c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(220, 38, 38, 0.3);
 }
 
 .btn-clear-all:active {
   transform: translateY(0);
 }
 
-/* Customizações específicas para histórico */
+/* Customizações para o list-simple */
+.historico-container ::ng-deep .list-header {
+  display: none;
+}
+
 .historico-container ::ng-deep .curriculo-list-simple-container {
-  background: transparent;
+  padding: 0;
 }
 
-.historico-container ::ng-deep .list-title {
-  color: #059669;
-}
-
-.historico-container ::ng-deep .empty-icon {
-  color: #6b7280;
-}
-
-/* Responsive */
 @media (max-width: 768px) {
-  .historico-header {
-    padding: 0 16px 16px;
+  .historico-container {
+    padding: 1rem;
   }
-  
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .header-content {
+    width: 100%;
+  }
+
+  .header-icon {
+    font-size: 36px;
+  }
+
+  .header-text h1 {
+    font-size: 1.5rem;
+  }
+
+  .header-text p {
+    font-size: 0.875rem;
+  }
+
   .btn-clear-all {
-    font-size: 13px;
-    padding: 8px 12px;
+    align-self: flex-end;
   }
 }

@@ -12,7 +12,7 @@
   </div>
 
   <div *ngIf="!isLoading && curriculos.length === 0" class="empty-state">
-    <div class="empty-icon">{{ config.emptyIcon }}</div>
+    <span class="material-symbols-outlined empty-icon">folder_open</span>
     <h3>{{ config.emptyMessage }}</h3>
     <p *ngIf="config.title.includes('Favoritos')">
       Você ainda não adicionou nenhum currículo aos seus favoritos.
@@ -23,39 +23,41 @@
   </div>
 
   <div *ngIf="!isLoading && curriculos.length > 0" class="curriculos-list">
-    <div *ngFor="let curriculo of curriculos; trackBy: trackByCurriculoId" class="curriculo-item">
-      <div class="curriculo-content">
-        <div class="curriculo-avatar">
-          <div class="avatar-icon">👤</div>
+    <div *ngFor="let curriculo of curriculos; trackBy: trackByCurriculoId" class="curriculo-card">
+      <div class="card-header">
+        <div class="avatar">
+          <span class="material-symbols-outlined">person</span>
         </div>
-        
-        <div class="curriculo-info">
+        <div class="header-info">
           <h3 class="curriculo-name">{{ curriculo.nomeCompleto }}</h3>
-          <div class="curriculo-details">
-            <span class="curriculo-id">ID: {{ curriculo.numeroIdentificador }}</span>
-            <span class="curriculo-institution" *ngIf="curriculo.instituicao">
+          <div class="meta-info">
+            <span class="meta-item" *ngIf="curriculo.nacionalidade">
+              <span class="material-symbols-outlined">flag</span>
+              {{ curriculo.nacionalidade }}
+            </span>
+            <span class="meta-item" *ngIf="curriculo.instituicao">
+              <span class="material-symbols-outlined">school</span>
               {{ curriculo.instituicao }}
             </span>
           </div>
-          <p class="curriculo-resume" *ngIf="curriculo.resumoBreve">
-            {{ curriculo.resumoBreve | slice:0:120 }}{{ curriculo.resumoBreve.length > 120 ? '...' : '' }}
-          </p>
         </div>
       </div>
 
-      <div class="curriculo-actions">
-        <button class="btn-action btn-view" (click)="onView(curriculo.id)" title="Visualizar currículo">
-          <span class="icon">👁️</span>
-          <span class="text">Ver</span>
+      <p class="curriculo-resume" *ngIf="curriculo.resumoBreve">
+        {{ curriculo.resumoBreve | slice:0:150 }}{{ curriculo.resumoBreve.length > 150 ? '...' : '' }}
+      </p>
+
+      <div class="card-footer">
+        <button class="btn-icon btn-view" (click)="onView(curriculo.id)" title="Visualizar currículo">
+          <span class="material-symbols-outlined">visibility</span>
         </button>
         
         <button 
           *ngIf="config.showRemoveButton" 
-          class="btn-action btn-remove" 
+          class="btn-icon btn-remove" 
           (click)="onRemove(curriculo.id)" 
           [title]="config.title.includes('Favoritos') ? 'Remover dos favoritos' : 'Remover do histórico'">
-          <span class="icon">🗑️</span>
-          <span class="text">Remover</span>
+          <span class="material-symbols-outlined">delete</span>
         </button>
       </div>
     </div>

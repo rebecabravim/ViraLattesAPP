@@ -61,42 +61,35 @@ export class MeuCurriculoComponent implements OnInit {
     this.state.isLoading = true;
     this.clearMessages();
 
-    // Verifica se o usuário tem um currículo vinculado (armazenado no localStorage)
-    const idMeuCurriculo = localStorage.getItem('idMeuCurriculo');
-    if (idMeuCurriculo) {
-      try {
-        this.curriculoService.getCurriculoById(idMeuCurriculo).subscribe({
-          next: (response) => {
-            if (response && response.success && response.data) {
-              // Usuário já tem um currículo vinculado - redireciona para visualização completa
-              this.router.navigate(['/curriculo/view', idMeuCurriculo]);
-            } else {
-              // Currículo não encontrado, resetar vínculo
-              this.state.hasVinculo = false;
-              localStorage.removeItem('idMeuCurriculo');
-            }
+    try {
+      this.curriculoService.getMeuCurriculo(userId).subscribe({
+        next: (response) => {
+          if (response && response.success && response.data && response.data.id) {
+            const curriculoId = response.data.id;
+            localStorage.setItem('idMeuCurriculo', curriculoId);
+            this.router.navigate(['/curriculo/view', curriculoId]);
+          } else {
+            this.state.hasVinculo = false;
+            localStorage.removeItem('idMeuCurriculo');
+          }
+          this.state.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Erro ao carregar meu currículo:', error);
+          
+          if (error.status === 404) {
+            this.state.hasVinculo = false;
+            localStorage.removeItem('idMeuCurriculo');
             this.state.isLoading = false;
-          },
-          error: (error) => {
-            console.error('Erro ao carregar meu currículo:', error);
+          } else {
             this.state.hasVinculo = false;
             this.state.isLoading = false;
-            
-            // Se o erro for de não encontrado (404), remove do localStorage
-            if (error.status === 404) {
-              localStorage.removeItem('idMeuCurriculo');
-            } else {
-              this.handleAuthError(error);
-            }
+            this.handleAuthError(error);
           }
-        });
-      } catch (error) {
-        this.handleValidationError(error);
-      }
-    } else {
-      // Usuário não tem currículo vinculado
-      this.state.hasVinculo = false;
-      this.state.isLoading = false;
+        }
+      });
+    } catch (error) {
+      this.handleValidationError(error);
     }
   }
 

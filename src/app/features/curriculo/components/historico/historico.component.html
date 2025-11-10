@@ -1,11 +1,19 @@
 <div class="historico-container">
-  <div class="historico-header">
+  <div class="page-header">
+    <div class="header-content">
+      <span class="material-symbols-outlined header-icon">history</span>
+      <div class="header-text">
+        <h1>Histórico de Visualizações</h1>
+        <p>Currículos visualizados recentemente</p>
+      </div>
+    </div>
     <button 
       *ngIf="!isLoading && historico.length > 0" 
       class="btn-clear-all" 
       (click)="clearHistorico()"
       title="Limpar todo o histórico">
-      🗑️ Limpar Histórico
+      <span class="material-symbols-outlined">delete_sweep</span>
+      Limpar Tudo
     </button>
   </div>
   

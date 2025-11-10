@@ -1,25 +1,9 @@
 <div class="list-curriculo-container">
-
-
- 
-
   <app-filtros-busca
     [isExpanded]="showFilters"
     (filtrosChanged)="onSearchWithFilters($event)"
     (filtrosCleared)="onClearFilters()">
   </app-filtros-busca>
-
-  <div *ngIf="hasActiveFilters()" class="active-filters-indicator">
-    <span class="filter-badge">
-      <span class="material-symbols-outlined">filter_list</span>
-      Filtros ativos
-    </span>
-    <button class="btn-clear-filters" (click)="onClearFilters()">
-      Limpar todos os filtros
-    </button>
-  </div>
-
-
 
   <div *ngIf="filteredCurriculos.length === 0 && !searchTerm" class="empty-state">
     <span class="material-symbols-outlined empty-icon">description</span>
@@ -29,59 +13,48 @@
   <div *ngIf="filteredCurriculos.length === 0 && searchTerm" class="no-results">
     <span class="material-symbols-outlined no-results-icon">search_off</span>
     <h3>Nenhum resultado encontrado</h3>
-    <p>Não encontramos currículos que correspondam à sua busca por "{{ searchTerm }}"</p>
+    <p>Não encontramos currículos para "{{ searchTerm }}"</p>
     <button class="btn-secondary" (click)="onClearFilters()">
-      Ver Todos os Currículos
+      <span class="material-symbols-outlined">refresh</span>
+      Ver Todos
     </button>
   </div>
 
-  <div *ngIf="filteredCurriculos.length > 0" class="curriculos-grid">
+  <div *ngIf="filteredCurriculos.length > 0" class="curriculos-list">
     <div *ngFor="let curriculo of filteredCurriculos" class="curriculo-card">
       <div class="card-header">
-        <h3>{{ curriculo.nomeCompleto }}</h3>
-        <div class="card-actions">
-          <button class="btn-action btn-view" (click)="onView(curriculo.id)" title="Visualizar">
-            <span class="material-symbols-outlined">visibility</span>
-          </button>
+        <div class="avatar">
+          <span class="material-symbols-outlined">person</span>
+        </div>
+        <div class="header-info">
+          <h3 class="curriculo-name">{{ curriculo.nomeCompleto }}</h3>
+          <div class="meta-info">
+            <span class="meta-item" *ngIf="curriculo.nacionalidade">
+              <span class="material-symbols-outlined">flag</span>
+              {{ curriculo.nacionalidade }}
+            </span>
+            <span class="meta-item" *ngIf="curriculo.instituicao">
+              <span class="material-symbols-outlined">school</span>
+              {{ curriculo.instituicao }}
+            </span>
+          </div>
         </div>
       </div>
-      
-      <div class="card-body">
-        <div class="info-item">
-          <span class="label">Identificador:</span>
-          <span class="value">{{ curriculo.numeroIdentificador }}</span>
-        </div>
-        
-        <div class="info-item" *ngIf="curriculo.instituicao">
-          <span class="label">Instituição:</span>
-          <span class="value">{{ curriculo.instituicao }}</span>
-        </div>
-        
-        <div class="info-item" *ngIf="curriculo.nacionalidade">
-          <span class="label">Nacionalidade:</span>
-          <span class="value">{{ curriculo.nacionalidade }}</span>
-        </div>
-        
-        <div class="info-item" *ngIf="curriculo.nomeEmCitacoes">
-          <span class="label">Nome em Citações:</span>
-          <span class="value citation">{{ curriculo.nomeEmCitacoes }}</span>
-        </div>
-        
-        <div class="info-item resume" *ngIf="curriculo.resumoBreve">
-          <span class="label">Resumo:</span>
-          <p class="resume-text">{{ curriculo.resumoBreve | slice:0:200 }}{{ curriculo.resumoBreve.length > 200 ? '...' : '' }}</p>
-        </div>
-      </div>
-      
+
+      <p class="curriculo-resume" *ngIf="curriculo.resumoBreve">
+        {{ curriculo.resumoBreve | slice:0:150 }}{{ curriculo.resumoBreve.length > 150 ? '...' : '' }}
+      </p>
+
       <div class="card-footer">
-        <button class="btn-primary-outline" (click)="onView(curriculo.id)">
-          Ver Detalhes
+        <button class="btn-icon btn-view" (click)="onView(curriculo.id)" title="Visualizar currículo">
+          <span class="material-symbols-outlined">visibility</span>
         </button>
       </div>
     </div>
-  </div>
 
-  <div *ngIf="filteredCurriculos.length > 0" class="results-info">
-    <p>Mostrando {{ filteredCurriculos.length }} de {{ totalCount }} currículos</p>
+    <div class="results-info">
+      <span class="material-symbols-outlined">info</span>
+      <p>{{ filteredCurriculos.length }} de {{ totalCount }} currículos</p>
+    </div>
   </div>
 </div>

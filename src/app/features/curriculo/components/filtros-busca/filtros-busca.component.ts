@@ -108,14 +108,15 @@ export class FiltrosBuscaComponent {
     if (this.filtros.areaDePesquisa?.trim()) {
       filtrosLimpos.areaDePesquisa = this.filtros.areaDePesquisa.trim();
     }
-    
+
+
+
     if (this.paisSelecionado?.trim()) {
       filtrosLimpos.paisDeNacionalidade = this.paisSelecionado;
-      filtrosLimpos.ehBrasileiro = null;
-    } else {
-      if (this.filtros.ehBrasileiro !== undefined) {
-        filtrosLimpos.ehBrasileiro = null;
-      }
+    } 
+
+    if(this.filtros.ehBrasileiro){
+      filtrosLimpos.ehBrasileiro = true;
     }
     
     if (this.filtros.palavrasChave && this.filtros.palavrasChave.length > 0) {

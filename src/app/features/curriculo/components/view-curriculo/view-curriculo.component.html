@@ -7,24 +7,17 @@
 
   <!-- Main Content -->
   <div *ngIf="!isLoading && curriculo" class="curriculo-layout">
-    <!-- Header -->
-    <header class="curriculo-header">
-      <div class="container">
-        <div class="header-content">
-          <button class="btn-back" (click)="onBack()">
-            <span class="back-icon">←</span>
-          </button>
-          <div class="app-title">ViraLattes</div>
-        </div>
-      </div>
-    </header>
+    <!-- Botão Voltar (não aparece para Meu Currículo) -->
+    <button *ngIf="!isMeuCurriculo" class="btn-back-float" (click)="onBack()" title="Voltar">
+      <span class="material-symbols-outlined">close</span>
+    </button>
 
     <main class="main-content">
       <!-- Profile Header Card -->
       <div class="profile-card">
         <div class="profile-content">
           <div class="profile-avatar">
-            <span class="avatar-icon">👤</span>
+            <span class="material-symbols-outlined">person</span>
           </div>
           <div class="profile-info">
             <div class="profile-names">
@@ -36,31 +29,31 @@
                   (click)="toggleFavorite()"
                   [disabled]="isTogglingFavorite"
                   title="{{ isFavorited ? 'Remover dos favoritos' : 'Adicionar aos favoritos' }}">
-                  <span class="star-icon">{{ isFavorited ? '★' : '☆' }}</span>
-                </button>
-                
-                <!-- Botão de Desvincular para Meu Currículo -->
-                <button 
-                  *ngIf="isMeuCurriculo"
-                  class="unlink-btn" 
-                  (click)="onDesvincularMeuCurriculo()"
-                  [disabled]="isDesvinculando"
-                  title="Desvincular este currículo da minha conta">
-                  <span *ngIf="!isDesvinculando" class="unlink-icon">🔗</span>
-                  <span *ngIf="isDesvinculando" class="spinner-small"></span>
-                  <span class="btn-text">{{ isDesvinculando ? 'Desvinculando...' : 'Desvincular' }}</span>
+                  <span class="material-symbols-outlined">{{ isFavorited ? 'star' : 'star_outline' }}</span>
                 </button>
               </div>
               <p class="profile-citation">{{ curriculo.identificacao.nomeEmCitacoesBibliograficas }}</p>
+              
+              <!-- Botão de Desvincular para Meu Currículo -->
+              <button 
+                *ngIf="isMeuCurriculo"
+                class="unlink-btn" 
+                (click)="onDesvincularMeuCurriculo()"
+                [disabled]="isDesvinculando"
+                title="Desvincular este currículo da minha conta">
+                <span *ngIf="!isDesvinculando" class="material-symbols-outlined">link_off</span>
+                <span *ngIf="isDesvinculando" class="spinner-small"></span>
+                <span class="btn-text">{{ isDesvinculando ? 'Desvinculando...' : 'Desvincular' }}</span>
+              </button>
             </div>
             
             <div class="profile-details">
               <div class="detail-item">
-                <span class="detail-icon">📍</span>
+                <span class="material-symbols-outlined">flag</span>
                 <span class="detail-text">{{ curriculo.identificacao.paisDeNacionalidade }}</span>
               </div>
               <div class="detail-item" *ngIf="curriculo.dadosGerais.endereco">
-                <span class="detail-icon">🏢</span>
+                <span class="material-symbols-outlined">business</span>
                 <span class="detail-text">{{ curriculo.dadosGerais.endereco.nomeInstituicaoEmpresa }}</span>
               </div>
             </div>
@@ -78,10 +71,10 @@
         <div class="accordion-item" [class.active]="activeSection === 'resumo'">
           <div class="accordion-header" (click)="toggleSection('resumo')">
             <div class="accordion-title">
-              <span class="accordion-icon">📖</span>
+              <span class="material-symbols-outlined">description</span>
               <span class="accordion-text">Resumo</span>
             </div>
-            <span class="accordion-arrow" [class.rotated]="activeSection === 'resumo'">▼</span>
+            <span class="material-symbols-outlined accordion-arrow" [class.rotated]="activeSection === 'resumo'">expand_more</span>
           </div>
           <div class="accordion-content" *ngIf="activeSection === 'resumo'">
             <p class="resumo-text">{{ curriculo.dadosGerais.textoResumoCvRh }}</p>
@@ -92,25 +85,33 @@
         <div class="accordion-item" [class.active]="activeSection === 'formacao'">
           <div class="accordion-header" (click)="toggleSection('formacao')">
             <div class="accordion-title">
-              <span class="accordion-icon">🎓</span>
+              <span class="material-symbols-outlined">school</span>
               <span class="accordion-text">Formação Acadêmica</span>
             </div>
-            <span class="accordion-arrow" [class.rotated]="activeSection === 'formacao'">▼</span>
+            <span class="material-symbols-outlined accordion-arrow" [class.rotated]="activeSection === 'formacao'">expand_more</span>
           </div>
           <div class="accordion-content" *ngIf="activeSection === 'formacao'">
             <div class="formacao-list">
               <div *ngFor="let formacao of curriculo.dadosGerais.formacoesAcademicas; let i = index" class="formacao-item">
                 <div *ngIf="i > 0" class="separator"></div>
                 <div class="formacao-header">
-                  <h3 class="formacao-title">{{ formacao.tipo }} - {{ formacao.nomeCurso }}</h3>
+                  <div class="formacao-title-group">
+                    <span class="formacao-tipo">{{ formacao.tipo }}</span>
+                    <h3 class="formacao-title">{{ formacao.nomeCurso }}</h3>
+                  </div>
                   <span class="formacao-year">{{ formacao.anoDeConclusao || formacao.anoDeInicio }}</span>
                 </div>
-                <p class="formacao-institution">{{ formacao.nomeInstituicao }}</p>
+                <p class="formacao-institution">
+                  <span class="label">Instituição:</span>
+                  {{ formacao.nomeInstituicao }}
+                </p>
                 <p *ngIf="formacao.tituloTrabalho" class="formacao-work">
-                  Trabalho: {{ formacao.tituloTrabalho }}
+                  <span class="label">Trabalho:</span>
+                  {{ formacao.tituloTrabalho }}
                 </p>
                 <p *ngIf="formacao.nomeOrientador" class="formacao-advisor">
-                  Orientador: {{ formacao.nomeOrientador }}
+                  <span class="label">Orientador:</span>
+                  {{ formacao.nomeOrientador }}
                 </p>
               </div>
 
@@ -123,12 +124,17 @@
                     <h3 class="formacao-title">{{ posDoc.nomeCurso }}</h3>
                     <span class="formacao-year">{{ posDoc.anoDeConclusao || posDoc.anoDeInicio }}</span>
                   </div>
-                  <p class="formacao-institution">{{ posDoc.nomeInstituicao }}</p>
+                  <p class="formacao-institution">
+                    <span class="label">Instituição:</span>
+                    {{ posDoc.nomeInstituicao }}
+                  </p>
                   <p *ngIf="posDoc.tituloTrabalho" class="formacao-work">
-                    Trabalho: {{ posDoc.tituloTrabalho }}
+                    <span class="label">Trabalho:</span>
+                    {{ posDoc.tituloTrabalho }}
                   </p>
                   <p *ngIf="posDoc.nomeOrientador" class="formacao-advisor">
-                    Orientador: {{ posDoc.nomeOrientador }}
+                    <span class="label">Orientador:</span>
+                    {{ posDoc.nomeOrientador }}
                   </p>
                 </div>
               </div>
@@ -140,10 +146,10 @@
         <div class="accordion-item" [class.active]="activeSection === 'pesquisa'">
           <div class="accordion-header" (click)="toggleSection('pesquisa')">
             <div class="accordion-title">
-              <span class="accordion-icon">🔬</span>
+              <span class="material-symbols-outlined">science</span>
               <span class="accordion-text">Linhas de Pesquisa</span>
             </div>
-            <span class="accordion-arrow" [class.rotated]="activeSection === 'pesquisa'">▼</span>
+            <span class="material-symbols-outlined accordion-arrow" [class.rotated]="activeSection === 'pesquisa'">expand_more</span>
           </div>
           <div class="accordion-content" *ngIf="activeSection === 'pesquisa'">
             <div class="pesquisa-list">
@@ -158,7 +164,7 @@
               <h4 class="section-subtitle">Projetos de Pesquisa</h4>
               <ul class="projetos-list">
                 <li *ngFor="let projeto of curriculo.dadosGerais.projetosDePesquisa" class="projeto-item">
-                  <strong>{{ projeto.nomeProjeto }}</strong>
+                  <h5 class="projeto-nome">{{ projeto.nomeProjeto }}</h5>
                   <p class="projeto-desc">{{ projeto.descricao }}</p>
                   <span class="projeto-status">{{ projeto.situacao }}</span>
                 </li>
@@ -171,10 +177,10 @@
         <div class="accordion-item" [class.active]="activeSection === 'producao'">
           <div class="accordion-header" (click)="toggleSection('producao')">
             <div class="accordion-title">
-              <span class="accordion-icon">🏆</span>
+              <span class="material-symbols-outlined">emoji_events</span>
               <span class="accordion-text">Produção Científica</span>
             </div>
-            <span class="accordion-arrow" [class.rotated]="activeSection === 'producao'">▼</span>
+            <span class="material-symbols-outlined accordion-arrow" [class.rotated]="activeSection === 'producao'">expand_more</span>
           </div>
           <div class="accordion-content" *ngIf="activeSection === 'producao' && curriculo.producoes">
             <div class="producao-sections">
@@ -186,8 +192,12 @@
                   <div class="producao-header">
                     <h3 class="producao-title">{{ artigo.tituloPeriodicoRevista }}</h3>
                   </div>
-                  <p class="producao-journal">{{ artigo.tituloPeriodicoRevista }}</p>
+                  <p class="producao-journal">
+                    <span class="label">Periódico:</span>
+                    {{ artigo.tituloPeriodicoRevista }}
+                  </p>
                   <div class="producao-authors">
+                    <span class="label">Autores:</span>
                     <span *ngFor="let autor of artigo.autores; let last = last">
                       {{ autor.nomeCompleto }}<span *ngIf="!last">, </span>
                     </span>
@@ -205,8 +215,12 @@
                     <h3 class="producao-title">{{ livro.titulo }}</h3>
                     <span class="producao-year">{{ livro.ano }}</span>
                   </div>
-                  <p class="producao-publisher">{{ livro.nomeEditora }}</p>
+                  <p class="producao-publisher">
+                    <span class="label">Editora:</span>
+                    {{ livro.nomeEditora }}
+                  </p>
                   <div class="producao-authors">
+                    <span class="label">Autores:</span>
                     <span *ngFor="let autor of livro.autores; let last = last">
                       {{ autor.nomeCompleto }}<span *ngIf="!last">, </span>
                     </span>
@@ -222,10 +236,11 @@
 
   <!-- Error State -->
   <div *ngIf="!isLoading && !curriculo" class="error-state">
-    <div class="error-icon">❌</div>
+    <span class="material-symbols-outlined error-icon">error</span>
     <h3>Currículo não encontrado</h3>
     <p>O currículo solicitado não foi encontrado ou pode ter sido removido.</p>
     <button class="btn-primary" (click)="onBack()">
+      <span class="material-symbols-outlined">arrow_back</span>
       Voltar à Lista
     </button>
   </div>

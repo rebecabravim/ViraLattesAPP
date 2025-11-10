@@ -1,7 +1,12 @@
 <div class="meu-curriculo-container">
-  <div class="header">
-    <h1 class="title">Meu Currículo</h1>
-    <p class="subtitle">Gerencie a vinculação do seu currículo pessoal</p>
+  <div class="page-header">
+    <div class="header-content">
+      <span class="material-symbols-outlined header-icon">badge</span>
+      <div class="header-text">
+        <h1>Meu Currículo</h1>
+        <p>Gerencie a vinculação do seu currículo pessoal</p>
+      </div>
+    </div>
   </div>
 
   <!-- Loading State -->
@@ -14,8 +19,11 @@
   <div *ngIf="!state.isLoading" class="sem-curriculo">
     <div class="search-section">
       <div class="search-header">
-        <h3>Buscar Meu Currículo</h3>
-        <p>Digite seu nome para encontrar seu currículo na plataforma:</p>
+        <span class="material-symbols-outlined">search</span>
+        <div>
+          <h3>Buscar Meu Currículo</h3>
+          <p>Digite seu nome para encontrar seu currículo na plataforma</p>
+        </div>
       </div>
 
       <div class="search-form">
@@ -32,7 +40,7 @@
             class="btn-search" 
             (click)="onSearch()"
             [disabled]="state.isSearching || !state.searchTerm.trim()">
-            <span *ngIf="!state.isSearching" class="search-icon">🔍</span>
+            <span *ngIf="!state.isSearching" class="material-symbols-outlined">search</span>
             <span *ngIf="state.isSearching" class="spinner-small"></span>
             {{ state.isSearching ? 'Buscando...' : 'Buscar' }}
           </button>
@@ -42,6 +50,7 @@
           *ngIf="state.searchResults.length > 0" 
           class="btn-clear" 
           (click)="clearSearch()">
+          <span class="material-symbols-outlined">close</span>
           Limpar Busca
         </button>
       </div>
@@ -50,43 +59,51 @@
     <!-- Resultados da Busca -->
     <div *ngIf="state.searchResults.length > 0" class="search-results">
       <div class="results-header">
-        <h4>Resultados da Busca</h4>
-        <p>Selecione o currículo que corresponde ao seu:</p>
+        <span class="material-symbols-outlined">list_alt</span>
+        <div>
+          <h4>Resultados da Busca</h4>
+          <p>Selecione o currículo que corresponde ao seu</p>
+        </div>
       </div>
 
       <div class="curriculo-list">
-        <div *ngFor="let curriculo of state.searchResults; trackBy: trackByCurriculoId" class="curriculo-item">
-          <div class="curriculo-content">
-            <div class="curriculo-avatar-small">
-              <span class="avatar-icon">👤</span>
+        <div *ngFor="let curriculo of state.searchResults; trackBy: trackByCurriculoId" class="curriculo-card">
+          <div class="card-main">
+            <div class="avatar">
+              <span class="material-symbols-outlined">person</span>
             </div>
-            <div class="curriculo-info-compact">
+            <div class="card-info">
               <h4 class="curriculo-name">{{ curriculo.nomeCompleto }}</h4>
-              <p class="curriculo-id">ID: {{ curriculo.numeroIdentificador }}</p>
-              <p class="curriculo-institution" *ngIf="curriculo.instituicao">
-                {{ curriculo.instituicao }}
-              </p>
+              <div class="meta-info">
+                <span class="meta-item" *ngIf="curriculo.nacionalidade">
+                  <span class="material-symbols-outlined">flag</span>
+                  {{ curriculo.nacionalidade }}
+                </span>
+                <span class="meta-item" *ngIf="curriculo.instituicao">
+                  <span class="material-symbols-outlined">school</span>
+                  {{ curriculo.instituicao }}
+                </span>
+              </div>
               <p class="curriculo-resume" *ngIf="curriculo.resumoBreve">
-                {{ curriculo.resumoBreve | slice:0:100 }}{{ curriculo.resumoBreve.length > 100 ? '...' : '' }}
+                {{ curriculo.resumoBreve | slice:0:120 }}{{ curriculo.resumoBreve.length > 120 ? '...' : '' }}
               </p>
             </div>
           </div>
 
-          <div class="curriculo-item-actions">
+          <div class="card-actions">
             <button 
-              class="btn btn-outline" 
+              class="btn-icon btn-view" 
               (click)="onViewCurriculo(curriculo.id)"
               title="Visualizar antes de vincular">
-              <span class="btn-icon">👁️</span>
-              Visualizar
+              <span class="material-symbols-outlined">visibility</span>
             </button>
             
             <button 
-              class="btn btn-success" 
+              class="btn-link" 
               (click)="onVincularCurriculo(curriculo.id)"
               [disabled]="state.isVinculando"
               title="Vincular este currículo à sua conta">
-              <span *ngIf="!state.isVinculando" class="btn-icon">✅</span>
+              <span *ngIf="!state.isVinculando" class="material-symbols-outlined">link</span>
               <span *ngIf="state.isVinculando" class="spinner-small"></span>
               {{ state.isVinculando ? 'Vinculando...' : 'Este é Meu Currículo' }}
             </button>
@@ -97,28 +114,31 @@
 
     <!-- Estado Vazio -->
     <div *ngIf="!state.isSearching && state.searchResults.length === 0 && !state.errorMessage" class="empty-state">
-      <div class="empty-icon">📄</div>
+      <span class="material-symbols-outlined empty-icon">description</span>
       <h3>Encontre Seu Currículo</h3>
       <p>Digite seu nome no campo acima para buscar seu currículo na plataforma.</p>
       <div class="help-info">
-        <h4>Dicas:</h4>
-        <ul>
-          <li>Use seu nome completo como cadastrado</li>
-          <li>Verifique se não há erros de digitação</li>
-          <li>Se não encontrar, o currículo pode não estar cadastrado ainda</li>
-        </ul>
+        <span class="material-symbols-outlined">lightbulb</span>
+        <div>
+          <h4>Dicas:</h4>
+          <ul>
+            <li>Use seu nome completo como cadastrado</li>
+            <li>Verifique se não há erros de digitação</li>
+            <li>Se não encontrar, o currículo pode não estar cadastrado ainda</li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Mensagens -->
   <div *ngIf="state.errorMessage" class="message error-message">
-    <span class="message-icon">❌</span>
+    <span class="material-symbols-outlined">error</span>
     <span class="message-text">{{ state.errorMessage }}</span>
   </div>
 
   <div *ngIf="state.successMessage" class="message success-message">
-    <span class="message-icon">✅</span>
+    <span class="material-symbols-outlined">check_circle</span>
     <span class="message-text">{{ state.successMessage }}</span>
   </div>
 </div>

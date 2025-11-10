@@ -1,12 +1,16 @@
 <div class="filtros-container" [ngClass]="{'expanded': isExpanded}">
   <div class="filtros-header">
-    <h3>🔍 Filtros</h3>
+    <h3>
+      <span class="material-symbols-outlined">filter_list</span>
+      Filtros de Busca
+    </h3>
     <div class="header-actions">
       <button 
         class="toggle-btn" 
         (click)="toggleFilters()"
         [attr.aria-expanded]="isExpanded">
-        {{ isExpanded ? '▲ Ocultar' : '▼ Mostrar' }}
+        <span class="material-symbols-outlined">{{ isExpanded ? 'expand_less' : 'expand_more' }}</span>
+        {{ isExpanded ? 'Ocultar' : 'Mostrar' }}
       </button>
     </div>
   </div>
@@ -35,7 +39,7 @@
                 id="assuntoValue"
                 [(ngModel)]="assuntoValue"
                 name="assuntoValue"
-                placeholder="Assunto (separado por vírgula)..."
+                placeholder="Assuntos (separados por vírgula)..."
                 class="filtro-input">
             </div>
           </div>
@@ -74,7 +78,7 @@
                 name="paisSelecionado"
                 class="filtro-select select-equal-width"
                 (change)="onCountryChange()">
-                <option value="" disabled selected hidden>País...</option>
+                <option value="" disabled selected hidden>País</option>
                 <option *ngFor="let pais of availableCountries" [value]="pais">{{ pais }}</option>
               </select>
 
@@ -83,7 +87,7 @@
                 [(ngModel)]="filtros.anoAPartirDe"
                 name="anoAPartirDe"
                 class="filtro-select select-equal-width">
-                <option value="" disabled selected hidden>Selecione Ano</option>
+                <option value="" disabled selected hidden>Ano</option>
                 <option *ngFor="let ano of availableYears" [value]="ano">{{ ano }}</option>
               </select>
             </div>
@@ -98,7 +102,7 @@
                 id="linhaDePesquisa"
                 [(ngModel)]="filtros.linhaDePesquisa"
                 name="linhaDePesquisa"
-                placeholder="Linha de Pesquisa (Ex: Inteligência Artificial...)"
+                placeholder="Linha de Pesquisa"
                 class="filtro-input">
             </div>
 
@@ -108,7 +112,7 @@
                 id="instituicao"
                 [(ngModel)]="filtros.instituicao"
                 name="instituicao"
-                placeholder="Instituição (Ex: USP, UNICAMP...)"
+                placeholder="Instituição"
                 class="filtro-input">
             </div>
           </div>
@@ -117,17 +121,21 @@
           <div class="palavras-chave-tags" *ngIf="filtros.palavrasChave && filtros.palavrasChave.length > 0">
             <span class="tag" *ngFor="let palavra of filtros.palavrasChave; let i = index">
               {{ palavra }}
-              <button type="button" class="remove-tag" (click)="removePalavraChave(i)">×</button>
+              <button type="button" class="remove-tag" (click)="removePalavraChave(i)">
+                <span class="material-symbols-outlined">close</span>
+              </button>
             </span>
           </div>
 
           <!-- Botões de ação -->
           <div class="filtros-actions">
-            <button type="button" class="btn-secondary" (click)="onClearFilters()">
-              🗑️ Limpar Filtros
+            <button type="button" class="btn-clear" (click)="onClearFilters()">
+              <span class="material-symbols-outlined">restart_alt</span>
+              Limpar
             </button>
-            <button type="submit" class="btn-primary">
-              🔍 Buscar com Filtros
+            <button type="submit" class="btn-search">
+              <span class="material-symbols-outlined">search</span>
+              Buscar
             </button>
           </div>
         </form>

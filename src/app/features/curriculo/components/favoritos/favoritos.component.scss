@@ -1,18 +1,72 @@
 .favoritos-container {
   min-height: 100vh;
-  background: #f8fafc;
-  padding: 20px 0;
+  background: var(--background);
+  padding: 2rem;
 }
 
-/* Customizações específicas para favoritos se necessário */
+.page-header {
+  max-width: 900px;
+  margin: 0 auto 2rem;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 51, 102, 0.08);
+  border-left: 4px solid var(--destaque);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-icon {
+  font-size: 48px;
+  color: var(--destaque);
+  flex-shrink: 0;
+}
+
+.header-text h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--principal);
+  margin: 0 0 0.25rem 0;
+}
+
+.header-text p {
+  font-size: 0.95rem;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Customizações para o list-simple */
+.favoritos-container ::ng-deep .list-header {
+  display: none;
+}
+
 .favoritos-container ::ng-deep .curriculo-list-simple-container {
-  background: transparent;
+  padding: 0;
 }
 
-.favoritos-container ::ng-deep .list-title {
-  color: #667eea;
-}
+@media (max-width: 768px) {
+  .favoritos-container {
+    padding: 1rem;
+  }
 
-.favoritos-container ::ng-deep .empty-icon {
-  color: #fbbf24;
+  .page-header {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .header-icon {
+    font-size: 36px;
+  }
+
+  .header-text h1 {
+    font-size: 1.5rem;
+  }
+
+  .header-text p {
+    font-size: 0.875rem;
+  }
 }

@@ -193,6 +193,18 @@ export class CurriculoService {
     return this.http.post<ApiResponse<any>>(`${this.userApiUrl}/${userId}/meuCurriculo`, { curriculoId }, this.getHttpOptions());
   }
 
+  getMeuCurriculo(userId: string): Observable<ApiResponse<Curriculo>> {
+    if (!this.isAuthenticated()) {
+      throw new Error('Usuário não autenticado para buscar currículo');
+    }
+    
+    if (!userId) {
+      throw new Error('ID do usuário é obrigatório');
+    }
+
+    return this.http.get<ApiResponse<Curriculo>>(`${this.userApiUrl}/${userId}/meuCurriculo`, this.getHttpOptions());
+  }
+
   desvincularMeuCurriculo(userId: string): Observable<ApiResponse<any>> {
     if (!this.isAuthenticated()) {
       throw new Error('Usuário não autenticado para desvincular currículo');

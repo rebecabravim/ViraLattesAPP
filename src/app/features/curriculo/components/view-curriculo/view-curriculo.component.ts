@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { CurriculoService, Curriculo, CurriculoResumo } from '../../services/curriculo.service';
 import { AuthService } from '../../../authentication/services/auth.service';
 import { HistoricoComponent } from '../historico/historico.component';
@@ -28,6 +29,7 @@ export class ViewCurriculoComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private location: Location,
     private curriculoService: CurriculoService,
     private authService: AuthService
   ) {}
@@ -83,7 +85,8 @@ export class ViewCurriculoComponent implements OnInit {
   // }
 
   onBack(): void {
-    this.router.navigate(['/curriculo']);
+    // Tenta voltar para a página anterior (mantém o estado da busca)
+    this.location.back();
   }
 
   toggleSection(section: string): void {

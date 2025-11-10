@@ -1,19 +1,22 @@
 <div class="register-container">
   <div class="register-card">
     <div class="register-header">
-      <h1 class="register-title">Criar Conta</h1>
-      <p class="register-subtitle">Preencha os dados abaixo para se cadastrar no ViraLattes</p>
+      <span class="material-symbols-outlined">person_add</span>
+      <h1>Criar Conta no ViraLattes</h1>
+      <p>Preencha os dados para começar</p>
     </div>
 
     <form #registerForm="ngForm" (ngSubmit)="onRegister(registerForm)" class="register-form">
       <!-- Nome -->
       <div class="form-group">
-        <label for="name" class="form-label">Nome Completo *</label>
+        <label for="name">
+          <span class="material-symbols-outlined">badge</span>
+          Nome Completo
+        </label>
         <input
           type="text"
           id="name"
           name="name"
-          class="form-input"
           [(ngModel)]="registerModel.name"
           #nameField="ngModel"
           required
@@ -29,136 +32,120 @@
 
       <!-- Email -->
       <div class="form-group">
-        <label for="email" class="form-label">Email *</label>
+        <label for="email">
+          <span class="material-symbols-outlined">email</span>
+          E-mail
+        </label>
         <input
           type="email"
           id="email"
           name="email"
-          class="form-input"
           [(ngModel)]="registerModel.email"
           #emailField="ngModel"
           required
           email
-          placeholder="Digite seu email"
+          placeholder="seu@email.com"
           [class.error]="emailField.invalid && emailField.touched"
         />
         <div *ngIf="emailField.invalid && emailField.touched" class="error-message">
-          <span *ngIf="emailField.errors?.['required']">Email é obrigatório</span>
-          <span *ngIf="emailField.errors?.['email']">Email deve ter um formato válido</span>
+          <span *ngIf="emailField.errors?.['required']">E-mail é obrigatório</span>
+          <span *ngIf="emailField.errors?.['email']">E-mail inválido</span>
         </div>
       </div>
 
       <!-- Senha -->
       <div class="form-group">
-        <label for="password" class="form-label">Senha *</label>
-        <div class="password-input-container">
+        <label for="password">
+          <span class="material-symbols-outlined">lock</span>
+          Senha
+        </label>
+        <div class="input-wrapper">
           <input
             [type]="showPassword ? 'text' : 'password'"
             id="password"
             name="password"
-            class="form-input"
             [(ngModel)]="registerModel.password"
             #passwordField="ngModel"
             required
             minlength="6"
-            placeholder="Digite sua senha"
+            placeholder="Mínimo 6 caracteres"
             [class.error]="passwordField.invalid && passwordField.touched"
           />
-          <button 
-            type="button" 
-            class="password-toggle"
-            (click)="toggleShowPassword()"
-            [title]="showPassword ? 'Ocultar senha' : 'Mostrar senha'">
-            {{ showPassword ? '👁️' : '🙈' }}
+          <button type="button" class="toggle-password" (click)="toggleShowPassword()">
+            <span class="material-symbols-outlined">
+              {{ showPassword ? 'visibility' : 'visibility_off' }}
+            </span>
           </button>
         </div>
         <div class="password-strength" *ngIf="registerModel.password">
-          <div class="strength-indicator" [class]="getPasswordStrength()">
-            <span class="strength-text">
-              Força da senha: 
-              <span [class]="getPasswordStrength()">
-                {{ getPasswordStrength() === 'weak' ? 'Fraca' : 
-                   getPasswordStrength() === 'medium' ? 'Média' : 'Forte' }}
-              </span>
-            </span>
-          </div>
+          <div class="strength-bar" [class]="getPasswordStrength()"></div>
+          <span class="strength-text" [class]="getPasswordStrength()">
+            {{ getPasswordStrength() === 'weak' ? 'Fraca' : 
+               getPasswordStrength() === 'medium' ? 'Média' : 'Forte' }}
+          </span>
         </div>
         <div *ngIf="passwordField.invalid && passwordField.touched" class="error-message">
           <span *ngIf="passwordField.errors?.['required']">Senha é obrigatória</span>
-          <span *ngIf="passwordField.errors?.['minlength']">Senha deve ter pelo menos 6 caracteres</span>
+          <span *ngIf="passwordField.errors?.['minlength']">Mínimo 6 caracteres</span>
         </div>
       </div>
 
       <!-- Confirmar Senha -->
       <div class="form-group">
-        <label for="confirmPassword" class="form-label">Confirmar Senha *</label>
-        <div class="password-input-container">
+        <label for="confirmPassword">
+          <span class="material-symbols-outlined">check_circle</span>
+          Confirmar Senha
+        </label>
+        <div class="input-wrapper">
           <input
             [type]="showConfirmPassword ? 'text' : 'password'"
             id="confirmPassword"
             name="confirmPassword"
-            class="form-input"
             [(ngModel)]="registerModel.confirmPassword"
             #confirmPasswordField="ngModel"
             required
-            placeholder="Confirme sua senha"
+            placeholder="Digite a senha novamente"
             [class.error]="(confirmPasswordField.invalid && confirmPasswordField.touched) || (!validatePasswords() && registerModel.confirmPassword)"
           />
-          <button 
-            type="button" 
-            class="password-toggle"
-            (click)="toggleShowConfirmPassword()"
-            [title]="showConfirmPassword ? 'Ocultar senha' : 'Mostrar senha'">
-            {{ showConfirmPassword ? '👁️' : '🙈' }}
+          <button type="button" class="toggle-password" (click)="toggleShowConfirmPassword()">
+            <span class="material-symbols-outlined">
+              {{ showConfirmPassword ? 'visibility' : 'visibility_off' }}
+            </span>
           </button>
         </div>
         <div *ngIf="!validatePasswords() && registerModel.confirmPassword" class="error-message">
           <span>As senhas não coincidem</span>
         </div>
-        <div *ngIf="confirmPasswordField.invalid && confirmPasswordField.touched" class="error-message">
-          <span *ngIf="confirmPasswordField.errors?.['required']">Confirmação de senha é obrigatória</span>
-        </div>
       </div>
 
       <!-- Mensagens -->
-      <div *ngIf="errorMessage" class="message error-alert">
+      <div *ngIf="errorMessage" class="alert alert-error">
+        <span class="material-symbols-outlined">error</span>
         {{ errorMessage }}
       </div>
 
-      <div *ngIf="successMessage" class="message success-alert">
+      <div *ngIf="successMessage" class="alert alert-success">
+        <span class="material-symbols-outlined">check_circle</span>
         {{ successMessage }}
       </div>
 
       <!-- Botões -->
-      <div class="form-actions">
-        <button
-          type="submit"
-          class="btn btn-primary"
-          [disabled]="isLoading || !registerForm.valid || !validatePasswords()"
-          [class.loading]="isLoading">
-          <span *ngIf="!isLoading">Criar Conta</span>
-          <span *ngIf="isLoading" class="loading-text">
-            <span class="spinner"></span>
-            Criando conta...
-          </span>
-        </button>
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="isLoading || !registerForm.valid || !validatePasswords()">
+        <span class="material-symbols-outlined">person_add</span>
+        {{ isLoading ? 'Criando conta...' : 'Criar Conta' }}
+      </button>
 
-        <button
-          type="button"
-          class="btn btn-secondary"
-          (click)="goToLogin()"
-          [disabled]="isLoading">
-          Já tenho uma conta
-        </button>
+      <div class="divider">
+        <span>ou</span>
       </div>
-    </form>
 
-    <div class="register-footer">
-      <p class="footer-text">
-        Ao criar uma conta, você concorda com nossos 
-        <a href="#" class="footer-link">Termos de Uso</a> e 
-        <a href="#" class="footer-link">Política de Privacidade</a>.
-      </p>
-    </div>
+      <button type="button" class="btn-secondary" (click)="goToLogin()" [disabled]="isLoading">
+        <span class="material-symbols-outlined">login</span>
+        Já tenho uma conta
+      </button>
+    </form>
   </div>
 </div>
